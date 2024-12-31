@@ -1,4 +1,4 @@
-## 프로젝트
+## 콘서트 예약 서비스
 
 ## Getting Started
 
@@ -11,3 +11,27 @@
 ```bash
 docker-compose up -d
 ```
+
+### 프로젝트 마일스톤
+<a href="https://babyslayerr.github.io/hhplus-week3/docs/mileStone.pdf">
+    <h3>프로젝트 마일스톤</h3>
+</a>
+
+
+### 시퀀스 다이어그램  
+<a href="https://babyslayerr.github.io/hhplus-week3/docs/sequence_diagram.html">
+    <h3>시퀀스 다이어그램</h3>
+</a>
+
+
+### ERD
+<a href="https://babyslayerr.github.io/hhplus-week3/docs/ERD.png">
+    <img src="docs/ERD.png" alt="Description of the image" width="auto">
+</a>
+
+### API 명세서
+<a href="https://babyslayerr.github.io/hhplus-week3/docs/api_specification.md">
+    <h3>API 명세서</h3>
+</a>
+
+
