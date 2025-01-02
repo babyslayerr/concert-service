@@ -1,0 +1,19 @@
+title 예약 가능 날짜 조회 API 
+
+activate Webpage (사용자)
+Webpage (사용자)-> Interceptor (토큰 관리 서비스) : 1. 토큰 검증
+alt 검증에 실패할 경우
+Webpage (사용자)<-- Interceptor (토큰 관리 서비스) : 2. 토큰 상태 반환 
+else 검증에 성공할 경우
+Interceptor (토큰 관리 서비스)-> Module (콘서트 날짜 관리 서비스): 2. 인터셉트 통과
+Module (콘서트 날짜 관리 서비스)-> DB (콘서트 날짜 관리 서비스): 3. 예약 가능한 콘서트 조회
+
+Module (콘서트 날짜 관리 서비스)<--DB (콘서트 날짜 관리 서비스): 4. 예약 가능한 콘서트 리스트 반환
+
+alt 예약가능한 콘서트가 있는 경우
+Webpage (사용자)<--Module (콘서트 날짜 관리 서비스): 5. 예약가능한 콘서트(날짜포함) List 반환
+else 예약가능한 콘서트가 없는 경우
+Webpage (사용자)<--Module (콘서트 날짜 관리 서비스): 5. 예약 가능한 콘서트가 없다고 반환
+end
+end
+

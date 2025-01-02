@@ -1,0 +1,22 @@
+title 예약 가능 좌석 조회 API 
+
+activate Webpage (사용자)
+Webpage (사용자)-> Interceptor (토큰 관리 서비스) : 1. 토큰 검증
+alt 검증에 실패할 경우
+Webpage (사용자)<-- Interceptor (토큰 관리 서비스) : 2. 토큰 상태 반환 
+else 검증에 성공할 경우
+Interceptor (토큰 관리 서비스)-> Module (콘서트 좌석 관리 서비스): 2. 인터셉트 통과
+Module (콘서트 좌석 관리 서비스)-> DB (콘서트 좌석 관리 서비스): 3. 예약 가능한 콘서트 좌석 조회
+note over Module (콘서트 좌석 관리 서비스), DB (콘서트 좌석 관리 서비스) : request : 콘서트 스케줄 ID
+
+Module (콘서트 좌석 관리 서비스)<--DB (콘서트 좌석 관리 서비스): 4. 예약 가능한 콘서트 좌석 리스트 반환
+
+note over Module (콘서트 좌석 관리 서비스), DB (콘서트 좌석 관리 서비스) : status가 none인 좌석만 반환
+
+alt 예약가능한 콘서트 좌석이 있는 경우
+Webpage (사용자)<--Module (콘서트 좌석 관리 서비스): 5. 예약가능한 콘서트좌석 List 반환
+else 예약가능한 콘서트 좌석이 없는 경우
+Webpage (사용자)<--Module (콘서트 좌석 관리 서비스): 5. 예약 가능한 콘서트좌석이 없다고 반환
+end
+end
+

@@ -2,7 +2,7 @@
 
 #### 토큰 발급 API
 **Endpoint**
-- ``POST /user/token``
+- ``GET /token``
 
 **Description**  
 유저가 서비스 이용시 사용할 토큰을 발급받는다. 해당 토큰은 이후 API 호출 시 대기열 검증에 사용된다.
@@ -10,18 +10,14 @@
 **Response**
 ```
 {
-    "token": "UUID_queuePosition",
-    "queuePosition": 123,
-    "estimatedWaitTime": 300
+    "token": "UUID"
 }
 ```
 - token: id와 대기순서를 포함
-- queuePosition: 유저의 현재 대기열 순위.
-- estimatedWaitTime: 대기 예상 시간 (초 단위).
 
 #### 대기열 상태 확인 API
 **Endpoint**
-- GET ```/user/token/status```
+- POST ```/token/status```
 
 **Description**  
 현재 대기열에서 유저의 상태를 확인한다. 실시간 대기열 정보(순서, 잔여 시간 등)를 제공한다.
@@ -29,18 +25,15 @@
 Request
 ```
 {
-    token : "UUID_queuePosition"
+    token : "UUID"
 }
 ```
 Response
 ```
 {
-"queuePosition": 123,
-"estimatedWaitTime": 200,
+"estimatedWaitTime": 200
 }
 ```
-- queuePosition: 유저의 현재 대기열 순위.
-- estimatedWaitTime: 남은 대기 예상 시간 (초 단위).
 
 ---
 ```아래에서부터는 헤더에 대기순번 토큰 필요함```
@@ -77,8 +70,7 @@ availableDates: 예약 가능한 날짜 목록
 
 ```
 {
-    concertId : 1,
-    concertDate : "YYYY-MM-DD"
+    concertId : 1
 }
 ```
 
@@ -202,6 +194,6 @@ Response
 {
 "userId" : 1
 "status": "completed",
-"message": "Payment successful and ownership assigned."
+"message": "결제가 성공적으로 완료되었습니다."
 }
 ```
