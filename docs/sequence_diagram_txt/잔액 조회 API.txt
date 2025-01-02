@@ -1,0 +1,16 @@
+title 잔액 조회 API
+
+activate Webpage (사용자)
+Webpage (사용자)-> Interceptor (토큰 관리 서비스) : 1. 토큰 검증
+alt 검증에 실패할 경우
+Webpage (사용자)<-- Interceptor (토큰 관리 서비스) : 2. 토큰 상태 반환 
+else 검증에 성공할 경우
+
+Interceptor (토큰 관리 서비스) -> Module (유저 관리 서비스): 2. 잔액 조회 요청
+
+Module (유저 관리 서비스) -> DB (유저): 3. 유저 조회
+
+Module (유저 관리 서비스) <-- DB (유저): 4. 조회된 유저 리턴
+
+Webpage (사용자) <-- Module (유저 관리 서비스): 5. 유저의 잔액 리턴
+end

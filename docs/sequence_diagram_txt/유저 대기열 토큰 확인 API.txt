@@ -1,0 +1,26 @@
+title 유저 대기열 토큰 확인 API 
+
+loop 사용자의 폴링(대기열 확인) 
+Webpage (사용자)-> Module (토큰관리 서비스): 1. 해당 사용자의 토큰 상태 확인 요청
+activate Webpage (사용자)
+activate Module (토큰관리 서비스)
+Module (토큰관리 서비스)->DB (대기열 토큰): 2. 해당 사용자의 토큰 유무 및 상태 확인
+activate DB (대기열 토큰)
+
+Module (토큰관리 서비스)<--DB (대기열 토큰): 3. 토큰 상태 조회 결과 반환
+deactivate DB (대기열 토큰)
+
+alt 토큰의 상태가 wait일 경우
+Module (토큰관리 서비스)->DB (대기열 토큰): 4.. 해당 사용자의 토큰 생성일 보다 먼저 생성된 토큰 수 확인
+Module (토큰관리 서비스)<--DB (대기열 토큰): 5. 순번 확인을 위한 토큰 수 반환
+Module (토큰관리 서비스)->Module (토큰관리 서비스): 6.예상 대기시간 조회
+Webpage (사용자)<--Module (토큰관리 서비스): 7. 토큰 및 예상 대기시간 반환
+note over Webpage (사용자),Module (토큰관리 서비스) : 토큰 정보(uuid, isActive)
+
+
+else 토큰의 상태가 active일 경우
+Webpage (사용자)<--Module (토큰관리 서비스): 4. 토큰의 상태값(active) 반환
+
+end
+end 
+

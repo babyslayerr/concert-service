@@ -1,0 +1,24 @@
+title 유저 대기열 토큰 발급 API 
+
+
+Webpage (사용자)-> Module (토큰관리 서비스): 1. 해당 사용자의 대기열 토큰 발급 요청
+activate Webpage (사용자)
+activate Module (토큰관리 서비스)
+Module (토큰관리 서비스)->DB (대기열 토큰): 2. 사용자 대기열 토큰 유무 조회
+activate DB (대기열 토큰)
+
+Module (토큰관리 서비스)<--DB (대기열 토큰): 3. 토큰 유무 조회 결과 반환
+deactivate DB (대기열 토큰)
+
+alt 기존 토큰 정보 존재
+Webpage (사용자)<--Module (토큰관리 서비스): 4. 기존 토큰 조회 정보 반환
+note over Webpage (사용자),Module (토큰관리 서비스) : 토큰 정보(uuid, isActive)
+
+else 기존 토큰 정보 없음
+Module (토큰관리 서비스)->Module (토큰관리 서비스): 4. 고유한 대기열 토큰 생성
+Module (토큰관리 서비스)->DB (대기열 토큰) : 5. 새로운 토큰 대기열 저장
+note over Module (토큰관리 서비스),DB (대기열 토큰) : 토큰 상태 : wait(대기)
+Module (토큰관리 서비스)<--DB (대기열 토큰) : 6. 저장 결과 반환
+Webpage (사용자)<--Module (토큰관리 서비스): 7. 새로운 대기열 토큰 정보 반환
+end
+
