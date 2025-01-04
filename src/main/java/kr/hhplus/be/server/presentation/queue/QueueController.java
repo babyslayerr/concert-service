@@ -11,13 +11,13 @@ import java.util.Map;
 @RestController
 public class QueueController {
     // 토큰 발급 API
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ResponseEntity<Map<String, String>> generateToken() {
         return ResponseEntity.ok(Map.of("token", "123e4567-e89b-12d3-a456-426614174000"));
     }
 
     // 대기열 상태 확인 API
-    @PostMapping("/token/status")
+    @GetMapping("/token/status")
     public ResponseEntity<Map<String, Object>> getQueueStatus(@RequestParam String token) {
         return ResponseEntity.ok(Map.of(
                 "estimatedWaitTime", 200
