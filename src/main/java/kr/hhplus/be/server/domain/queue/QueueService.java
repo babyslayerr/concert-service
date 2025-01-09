@@ -14,12 +14,12 @@ public class QueueService {
     private final QueueRepository queueRepository;
 
     @Transactional
-    public Queue getToken() {
+    public String getToken() {
         Queue token = Queue.builder()
                 .uuid(UUID.randomUUID().toString())
                 .build();
 
-        return queueRepository.save(token);
+        return queueRepository.save(token).getUuid();
     }
 
     @Transactional
@@ -32,6 +32,7 @@ public class QueueService {
             return QueueResponse
                     .builder()
                     .isActive("active")
+                    .expireAt(queue.getExpireAt())
                     .build();
         }
 

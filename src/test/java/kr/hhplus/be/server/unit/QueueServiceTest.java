@@ -34,10 +34,9 @@ public class QueueServiceTest {
                 );
 
         // when
-        Queue queue = queueService.getToken();
+        String uuid = queueService.getToken();
         // then
-        Assertions.assertNotNull(queue);
-        System.out.println(queue.getCreatedDate());
+        Assertions.assertNotNull(uuid);
     }
 
     @Test
