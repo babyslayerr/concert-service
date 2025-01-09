@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.unit;
 
 import kr.hhplus.be.server.domain.concert.*;
+import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
+import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,10 +55,10 @@ public class ConcertServiceTest {
 
 
         // when
-        List<LocalDate> availableDates = concertService.getAvailableConcertDates(concertId,pageable);
+        List<ConcertScheduleResponse> availableDates = concertService.getAvailableConcertDates(concertId,pageable);
 
         // then
-        Assertions.assertEquals("2025-01-01", availableDates.get(0).format(DateTimeFormatter.ofPattern("YYYY-MM-DD")));
+        Assertions.assertEquals("2025-01-01", availableDates.get(0).getCreatedDate().format(DateTimeFormatter.ofPattern("YYYY-MM-DD")));
     }
 
 
@@ -72,7 +74,7 @@ public class ConcertServiceTest {
         given(concertSeatRepository.findByConcertScheduleIdAndStatus(concertScheduleId,"available")).willReturn(mockList);
 
         // when
-        List<ConcertSeat> seats = concertService.getAvailableSeats(concertScheduleId);
+        List<ConcertSeatResponse> seats = concertService.getAvailableSeats(concertScheduleId);
 
         // then
         Assertions.assertEquals("available" ,seats.get(0).getStatus());

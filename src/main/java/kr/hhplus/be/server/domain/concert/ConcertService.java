@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.concert;
 
 import kr.hhplus.be.server.domain.user.User;
+import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
+import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,23 +19,34 @@ public class ConcertService {
 
     private final ConcertSeatRepository concertSeatRepository;
 
-    public List<LocalDate> getAvailableConcertDates(Long concertId, Pageable pageable) {
+    public List<ConcertScheduleResponse> getAvailableConcertDates(Long concertId, Pageable pageable) {
 
         Page<ConcertSchedule> concertScheduleList = concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable);
         // 날짜만 추출
-        List<LocalDate> dates = concertScheduleList.stream()
+        List<ConcertScheduleResponse> concertScheduleResponseList = concertScheduleList.stream()
                 .map((concertSchedule) -> {
-                    return concertSchedule.getConcertDate();
+                    return ConcertScheduleResponse.builder()
+                            .id(concertSchedule.getId())
+                            .createdDate(concertSchedule.getConcertDate())
+                            .build();
                 }).toList();
 
-        return dates;
+        return concertScheduleResponseList;
     }
 
-    public List<ConcertSeat> getAvailableSeats(Long concertScheduleId) {
+    public List<ConcertSeatResponse> getAvailableSeats(Long concertScheduleId) {
 
         List<ConcertSeat> availableSeats = concertSeatRepository.findByConcertScheduleIdAndStatus(concertScheduleId,"available");
-
-        return availableSeats;
+        List<ConcertSeatResponse> responsesList = availableSeats.stream()
+                .map((concertSeat) ->
+                        ConcertSeatResponse.builder()
+                                .id(concertSeat.getId())
+                                .seatNo(concertSeat.getSeatNo())
+                                .price(concertSeat.getPrice())
+                                .status(concertSeat.getStatus())
+                                .build()
+                ).toList();
+        return responsesList;
     }
 
     // facade 호출
