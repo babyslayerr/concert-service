@@ -1,0 +1,61 @@
+package kr.hhplus.be.server.domain.reservation;
+
+import jakarta.transaction.Transactional;
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
+import kr.hhplus.be.server.domain.user.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ReservationService {
+
+    private final ReservationRepository reservationRepository;
+
+    // 예약 생성
+    // facade 에 트랜잭션 걸려있음
+    public Reservation makeReservation(Long userId, Long concertSeatId, Long price) {
+
+        Reservation reservation = Reservation.builder()
+                .user(User.builder().id(userId).build())
+                .concertSeat(ConcertSeat.builder().id(concertSeatId).build())
+                .price(price)
+                .status("reserved")
+                .statusUpdateAt(LocalDateTime.now())
+                .statusUpdateAt(LocalDateTime.now().plusMinutes(5)) // 만료시간은 생성시점+5분까지
+                .build();
+        // 저장
+        Reservation savedReservation = reservationRepository.save(reservation);
+        return savedReservation;
+    }
+
+    // 예약 완료(결제 완료 상태)
+    // facade 에 트랜잭션 걸려있음
+    public void completeReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
+        if(reservation.getStatus().equals("expired")){
+            throw new IllegalStateException("만료된 예약입니다.");
+        }
+        reservation.completeReservation();
+        reservationRepository.save(reservation);
+    }
+
+    // 예약만료 스케줄러에서 사용하는 예약만료
+    public List<Reservation> expireReservation() {
+        // 만료시간이 현재 시간보다 뒤에 있으면 만료 처리 (만료시간 < 현재시간) -> 만료
+        List<Reservation> reservationList = reservationRepository.findByExpireAtBeforeAndStatus(LocalDateTime.now(),"reserved");
+
+        reservationList.forEach(reservation -> {
+            reservation.expire();
+            reservationRepository.save(reservation);
+        });
+
+        if(reservationList.isEmpty()){
+            System.out.println("Processed expired reservations: " + reservationList.size());
+        }
+        return reservationList;
+    }
+}
