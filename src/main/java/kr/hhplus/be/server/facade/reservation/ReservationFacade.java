@@ -8,6 +8,8 @@ import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
+import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
+import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +24,29 @@ public class ReservationFacade {
 
     // 콘서트 좌석 예약
     @Transactional
-    public Reservation reserveSeat(Long userId, Long concertScheduleId, Long seatNo) {
+    public ReservationResponse reserveSeat(Long userId, Long concertScheduleId, Long seatNo) {
         // 예약가능한 좌석 예약
         ConcertSeat reserveSeat = concertService.reserveAvailableSeat(userId, concertScheduleId, seatNo);
         // 예약 내역 생성
         Reservation reservation = reservationService.makeReservation(userId, reserveSeat.getId(), reserveSeat.getPrice());
-        return reservation;
+
+        // Response 생성
+        ConcertSeatResponse concertSeatResponse = ConcertSeatResponse
+                .builder()
+                .id(reserveSeat.getId())
+                .price(reserveSeat.getPrice())
+                .seatNo(reserveSeat.getSeatNo())
+                .status(reserveSeat.getStatus())
+                .build();
+
+        ReservationResponse response = ReservationResponse
+                .builder()
+                .concertSeat(concertSeatResponse)
+                .expireAt(reservation.getExpireAt())
+                .status(reservation.getStatus())
+                .price(reservation.getPrice())
+                .build();
+        return response;
     }
 
     // 좌석 결제

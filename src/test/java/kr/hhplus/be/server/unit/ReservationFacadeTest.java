@@ -8,6 +8,7 @@ import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.facade.reservation.ReservationFacade;
+import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
@@ -50,10 +51,13 @@ public class ReservationFacadeTest {
                         .price(10000L)
                         .build());
 
+        given(reservationService.makeReservation(any(),any(),any()))
+                .willReturn(Reservation.builder().build());
+
         InOrder inOrder = inOrder(concertService, reservationService);
 
         // when
-        Reservation reservation = reservationFacade.reserveSeat(userId, concertScheduleId, seatNo);
+        ReservationResponse response = reservationFacade.reserveSeat(userId, concertScheduleId, seatNo);
 
         // then
         // 호출 순서 확인
