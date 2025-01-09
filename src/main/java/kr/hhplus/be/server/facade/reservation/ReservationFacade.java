@@ -42,6 +42,7 @@ public class ReservationFacade {
         ReservationResponse response = ReservationResponse
                 .builder()
                 .concertSeat(concertSeatResponse)
+                .id(reservation.getId())
                 .expireAt(reservation.getExpireAt())
                 .status(reservation.getStatus())
                 .price(reservation.getPrice())

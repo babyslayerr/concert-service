@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ReservationResponse {
 
+    private Long id;
     private ConcertSeatResponse concertSeat;
     private Long price;
     private String status;
