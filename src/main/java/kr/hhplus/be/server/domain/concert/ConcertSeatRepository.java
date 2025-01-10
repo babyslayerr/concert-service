@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ConcertSeatRepository extends JpaRepository<ConcertSeat, Long> {
-    Optional<ConcertSeat > findConcertSeatByConcertScheduleIdAndSeatNo(Long concertScheduleId, Long seatNo);
+    Optional<ConcertSeat > findConcertSeatByConcertScheduleIdAndSeatNoAndStatus(Long concertScheduleId, Long seatNo,String status);
     List<ConcertSeat> findByConcertScheduleIdAndStatus(Long concertScheduleId, String status);
 }
