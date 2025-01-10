@@ -17,6 +17,8 @@ public class WebConfig implements WebMvcConfigurer {
         // 인터셉터 등록 및 경로 설정
         registry.addInterceptor(queueInterceptor)
                 .addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
-                .excludePathPatterns("/token/status", "/token"); // 토큰 발급 및 상태 확인에 대해서는 예외
+                .excludePathPatterns("/token/status", "/token","/swagger-ui/**",
+                        "/swagger-resources/**",
+                        "/v3/api-docs/**"); // 토큰 발급 및 상태 확인에 대해서는 예외
     }
 }
