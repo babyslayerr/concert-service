@@ -95,6 +95,7 @@ public class ReservationFacadeTest {
                 .seatNo(1L)
                 .price(5000L)
                 .concertSchedule(concertSchedule)
+                .status("available")
                 .build());
         // 예약 처리
         ReservationResponse response = reservationFacade.reserveSeat(user.getId(), concertSchedule.getId(), concertSeat.getSeatNo());
