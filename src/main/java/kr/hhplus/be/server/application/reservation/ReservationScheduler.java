@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.infrastructure.scheduler;
+package kr.hhplus.be.server.application.reservation;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.reservation.Reservation;

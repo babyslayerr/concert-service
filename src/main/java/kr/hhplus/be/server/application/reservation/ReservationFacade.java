@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.facade.reservation;
+package kr.hhplus.be.server.application.reservation;
 
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;

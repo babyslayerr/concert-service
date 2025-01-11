@@ -10,21 +10,16 @@ import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
-import kr.hhplus.be.server.facade.reservation.ReservationFacade;
+import kr.hhplus.be.server.application.reservation.ReservationFacade;
 import kr.hhplus.be.server.infrastructure.queue.QueueRepositoryImpl;
 import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.shaded.org.yaml.snakeyaml.tokens.Token;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
 
 @SpringBootTest
 public class ReservationFacadeTest {
