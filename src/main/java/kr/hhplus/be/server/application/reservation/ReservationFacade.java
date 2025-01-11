@@ -9,7 +9,7 @@ import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
-import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
+import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,22 +31,8 @@ public class ReservationFacade {
         Reservation reservation = reservationService.makeReservation(userId, reserveSeat.getId(), reserveSeat.getPrice());
 
         // Response 생성
-        ConcertSeatResponse concertSeatResponse = ConcertSeatResponse
-                .builder()
-                .id(reserveSeat.getId())
-                .price(reserveSeat.getPrice())
-                .seatNo(reserveSeat.getSeatNo())
-                .status(reserveSeat.getStatus())
-                .build();
+        ReservationResponse response = ReservationResponse.fromEntity(reservation);
 
-        ReservationResponse response = ReservationResponse
-                .builder()
-                .concertSeat(concertSeatResponse)
-                .id(reservation.getId())
-                .expireAt(reservation.getExpireAt())
-                .status(reservation.getStatus())
-                .price(reservation.getPrice())
-                .build();
         return response;
     }
 
@@ -55,13 +41,12 @@ public class ReservationFacade {
     public void makeSeatPayment(Long userId, Long concertSeatId, Long reservationId, String tokenUuid) {
         // 해당 좌석 조회
         ConcertSeat concertSeat = concertService.findConcertSeatById(concertSeatId);
-        User user = userService.findUserById(userId);
+
         // 결제 잔액 확인 및 차감
-        userService.makePayment(user, concertSeat.getPrice());
+        userService.makePayment(userId, concertSeat.getPrice());
 
         // 좌석상태 변경 요청
-        concertSeat.setCompletedStatus();
-        concertService.saveConcertSeat(concertSeat);
+        concertService.changeConcertSeatCompleted(concertSeat);
 
         // 예약 상태 변경(reserved -> completed)
         reservationService.completeReservation(reservationId);

@@ -64,7 +64,8 @@ public class ConcertService {
         return concertSeatRepository.findById(concertSeatId).orElseThrow();
     }
 
-    public ConcertSeat saveConcertSeat(ConcertSeat concertSeat) {
+    public ConcertSeat changeConcertSeatCompleted(ConcertSeat concertSeat) {
+        concertSeat.setCompletedStatus();
         return concertSeatRepository.save(concertSeat);
     }
 }

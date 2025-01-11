@@ -12,7 +12,7 @@ import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
 import kr.hhplus.be.server.application.reservation.ReservationFacade;
 import kr.hhplus.be.server.infrastructure.queue.QueueRepositoryImpl;
-import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
+import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

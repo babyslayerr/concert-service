@@ -43,7 +43,8 @@ public class UserService {
         return userRepository.findById(userId).orElseThrow();
     }
 
-    public UserBalanceHistory makePayment(User user, Long price) {
+    public UserBalanceHistory makePayment(Long userId, Long price) {
+        User user = userRepository.findById(userId).orElseThrow();
         if(user.getBalance() < price){
             throw new IllegalArgumentException("잔액이 부족합니다.");
         }

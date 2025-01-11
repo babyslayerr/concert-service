@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.presentation.reservation;
 
 import io.swagger.v3.oas.annotations.Operation;
-import kr.hhplus.be.server.presentation.reservation.dto.PaymentRequest;
-import kr.hhplus.be.server.presentation.reservation.dto.ReserveSeatRequest;
+import kr.hhplus.be.server.application.reservation.dto.PaymentRequest;
+import kr.hhplus.be.server.application.reservation.dto.ReserveSeatRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
