@@ -18,7 +18,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,10 +57,77 @@ public class ConcertServiceTest {
 
 
         // when
-        List<ConcertScheduleResponse> availableDates = concertService.getAvailableConcertDates(concertId,pageable);
+        List<ConcertSchedule> availableDates = concertService.getAvailableConcert(concertId,pageable).getContent();
 
         // then
-        Assertions.assertEquals("2025-01-01", availableDates.get(0).getCreatedDate().format(DateTimeFormatter.ofPattern("YYYY-MM-DD")));
+        Assertions.assertEquals("2025-01-01", availableDates.get(0).getConcertDate().format(DateTimeFormatter.ofPattern("YYYY-MM-DD")));
+    }
+
+
+
+
+    @Test
+    void 특정콘서트아이디가_주어졌을때_해당하는_콘서트스케줄이_내림차순으로_조회된다(){
+
+        // given
+        Long concertId = 1L;
+        List<ConcertSchedule> scheduleList = List.of(
+        ConcertSchedule.builder()
+                .id(1L)
+                .concertDate(LocalDate.of(2024,1,1))
+                .concert(Concert.builder()
+                        .id(concertId)
+                        .build())
+                .build(),
+        ConcertSchedule.builder()
+                .id(2L)
+                .concertDate(LocalDate.of(2024,3,1))
+                .concert(Concert.builder()
+                        .id(concertId)
+                        .build())
+                .build()
+        );
+        PageImpl<ConcertSchedule> concertSchedulePage = new PageImpl<>(scheduleList, PageRequest.of(0, 10), scheduleList.size());
+        given(concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(any(),any()))
+                .willReturn(concertSchedulePage);
+
+        // when
+        Page<ConcertSchedule> availableConcert = concertService.getAvailableConcert(concertId, PageRequest.of(0, 10));
+
+        // then
+        List<ConcertSchedule> list = availableConcert.getContent();
+        Assertions.assertEquals(list.get(0).getConcertDate(),LocalDate.of(2024,1,1));
+    }
+
+    @Test
+    void 특정콘서트ID가_주어졌지만_해당하는_스케줄이_없는경우_NoSuchElementException이_반환된다(){
+        // given
+        Long concertId = 1000L;
+        Pageable pageable = PageRequest.of(0, 10);
+        given(concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable))
+                .willReturn(new PageImpl<>(new ArrayList<>(),pageable,0));
+
+        // when, then
+
+        Assertions.assertThrows(
+                NoSuchElementException.class,
+                ()->
+                concertService.getAvailableConcert(concertId,pageable)
+        );
+    }
+
+
+    @Test
+    void 예약가능한_좌석이_없을경우_NoSuchElementException이_반환된다(){
+        // given
+        long concertScheduleId = 1L;
+        given(concertSeatRepository.findByConcertScheduleIdAndStatus(concertScheduleId,"available"))
+                .willReturn(new ArrayList<>());
+
+        // when, then
+        Assertions.assertThrows(NoSuchElementException.class,()->
+                concertService.getAvailableSeats(concertScheduleId)
+                );
     }
 
 
@@ -74,10 +143,9 @@ public class ConcertServiceTest {
         given(concertSeatRepository.findByConcertScheduleIdAndStatus(concertScheduleId,"available")).willReturn(mockList);
 
         // when
-        List<ConcertSeatResponse> seats = concertService.getAvailableSeats(concertScheduleId);
+        List<ConcertSeat> seats = concertService.getAvailableSeats(concertScheduleId);
 
         // then
         Assertions.assertEquals("available" ,seats.get(0).getStatus());
     }
-
 }

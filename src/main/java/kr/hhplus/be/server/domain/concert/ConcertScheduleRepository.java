@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule, Long> {
 
     Page<ConcertSchedule> findByConcertIdOrderByConcertDateAsc(Long concertId, Pageable pageable);
+
+    Page<ConcertSchedule> findAllOrderByConcertDateAsc(Pageable pageable);
 }
