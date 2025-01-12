@@ -23,11 +23,8 @@ public class User {
     private Long balance;
 
     public void setBalance(Long balance) {
+        if(balance > 10000000) throw new IllegalArgumentException("최대잔액은 1000만원을 넘을 수 없습니다.");
         this.balance = balance;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
 }

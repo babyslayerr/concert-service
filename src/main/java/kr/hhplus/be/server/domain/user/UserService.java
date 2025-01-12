@@ -5,6 +5,8 @@ import kr.hhplus.be.server.presentation.user.dto.UserBalanceHistoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,6 +24,7 @@ public class UserService {
     public UserBalanceHistoryResponse chargeAmount(Long userId, Long amount) {
         // user 내 잔액 저장
         User user = userRepository.findById(userId).orElseThrow();
+        if(amount < 0 || amount > 1000000) throw new IllegalArgumentException("잘못된 충전 금액입니다.");
         user.setBalance(user.getBalance()+amount);
         userRepository.save(user);
 
@@ -40,7 +43,9 @@ public class UserService {
     }
 
     public User findUserById(Long userId){
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(()->
+                new NoSuchElementException("유저를 찾을 수 없습니다.")
+                );
     }
 
     public UserBalanceHistory makePayment(Long userId, Long price) {
