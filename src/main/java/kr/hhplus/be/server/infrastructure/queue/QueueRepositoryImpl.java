@@ -29,9 +29,8 @@ public class QueueRepositoryImpl implements QueueRepository {
     }
 
     @Override
-    public long countByCreatedDateBefore(LocalDateTime createdDate) {
-        
-        return queueJpaRepository.countByCreatedDateBeforeAndIsActiveWait(createdDate);
+    public long countByCreatedDateBeforeAndIsActive(LocalDateTime createdDate, String isActive) {
+        return queueJpaRepository.countByCreatedDateBeforeAndIsActive(createdDate,isActive);
     }
 
     @Override

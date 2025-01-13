@@ -2,8 +2,9 @@ package kr.hhplus.be.server.common.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.hhplus.be.server.application.queue.QueueFacade;
 import kr.hhplus.be.server.domain.queue.QueueService;
-import kr.hhplus.be.server.presentation.queue.QueueResponse;
+import kr.hhplus.be.server.application.queue.dto.QueueResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @RequiredArgsConstructor
 public class QueueInterceptor implements HandlerInterceptor {
 
-    private final QueueService queueService;
+    private final QueueFacade queueFacade;
 
 
     @Override
@@ -29,7 +30,7 @@ public class QueueInterceptor implements HandlerInterceptor {
 
         try {
             // checkStatus 메서드 호출로 상태 확인
-            QueueResponse queueResponse = queueService.checkStatus(uuid);
+            QueueResponse queueResponse = queueFacade.checkStatus(uuid);
 
             // 토큰 상태가 "active"가 아니면 요청 차단
             if (!"active".equals(queueResponse.getIsActive())) {

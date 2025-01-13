@@ -13,7 +13,7 @@ public interface QueueRepository {
 
     Optional<Queue> findByUuid(String uuid);
 
-    long countByCreatedDateBefore(LocalDateTime createdDate);
+    long countByCreatedDateBeforeAndIsActive(LocalDateTime createdDate,String isActive);
 
     void delete(Queue queue);
 

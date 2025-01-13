@@ -24,4 +24,6 @@ public interface QueueJpaRepository extends JpaRepository<Queue, Long> {
     long countByIsActive(String active);
 
     List<Queue> findByIsActiveOrderByCreatedDateAsc(String isActive, Pageable pageable);
+
+    long countByCreatedDateBeforeAndIsActive(LocalDateTime createdDate,String isActive);
 }

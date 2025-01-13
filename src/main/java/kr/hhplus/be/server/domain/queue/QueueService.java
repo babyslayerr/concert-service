@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.queue;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.presentation.queue.QueueResponse;
+import kr.hhplus.be.server.application.queue.dto.QueueResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,28 +27,16 @@ public class QueueService {
     }
 
     @Transactional
-    public QueueResponse checkStatus(String uuid) {
-        // 변경은 클라이언트쪽이 더많을거라 생각해 책임분리를 위해 Model 에다가 mapper 메서드 작성
+    public Queue checkStatus(String uuid) {
         Queue queue = queueRepository.findByUuid(uuid).orElseThrow();
 
         // 만약 active 상태면 그대로 반환
-        if(queue.getIsActive().equals("active")){
-            return QueueResponse
-                    .builder()
-                    .isActive("active")
-                    .expireAt(queue.getExpireAt())
-                    .build();
-        }
+        return queue;
+    }
 
-        // 앞선 대기자들 수
-        long beforeCount = queueRepository.countByCreatedDateBefore(queue.getCreatedDate());
-
-
-        return QueueResponse
-                .builder()
-                .isActive("wait")
-                .waitingCount(beforeCount)
-                .build();
+    // 대기순번 계산
+    public long getWaitingCount(Queue queue) {
+        return queueRepository.countByCreatedDateBeforeAndIsActive(queue.getCreatedDate(), "wait");
     }
 
     public void removeToken(String tokenUuid) {
