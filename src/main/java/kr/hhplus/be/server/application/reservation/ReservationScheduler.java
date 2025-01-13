@@ -19,11 +19,7 @@ public class ReservationScheduler {
     @Transactional
     void expireReservation(){
         // 예약 예약만료 처리
-        List<Reservation> expiredReservationList = reservationService.expireReservation(); // 조회된 리스트는 영속상태
+        reservationService.expireReservation(); // 조회된 리스트는 영속상태
 
-        // 예약과 매핑된 좌석을 예약 가능한 상태로 변경
-        expiredReservationList.forEach(reservation -> {
-            reservation.getConcertSeat().setReservedStatus(); // 트랜잭션 종료시점에 반영
-        });
     }
 }
