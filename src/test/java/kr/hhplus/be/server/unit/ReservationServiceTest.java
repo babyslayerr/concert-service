@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.unit;
 
+import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
@@ -11,9 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 public class ReservationServiceTest {
@@ -43,7 +48,7 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void 결제전_예약이_만료시_예외가_발생한다(){
+    void 결제전에_예약이_만료시_예외가_발생한다(){
 
         // given
         Long reservationId = 1L;
@@ -58,7 +63,54 @@ public class ReservationServiceTest {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             reservationService.completeReservation(reservationId);
         });
+    }
+
+    @Test
+    void 예약의상태가_예약에서_만료로_변경된다(){
+        // given
+        List<Reservation> reservations = List.of(Reservation.builder()
+                .concertSeat(new ConcertSeat()).status("reserved").build());
+        given(reservationRepository.findByExpireAtBeforeAndStatus(any(),anyString()))
+                .willReturn(reservations);
+
+        // when
+        reservationService.expireReservation();
+
+        // then
+        reservations.forEach(reservation
+                -> Assertions.assertEquals("expired", reservation.getStatus()));
+
+    }
+    @Test
+    void 예약상태가_만료될때_연관된_좌석상태도_만료로_변경된다(){
+
+        // given
+        List<Reservation> reservations = List.of(Reservation.builder()
+                .concertSeat(new ConcertSeat()).status("reserved").build());
+        given(reservationRepository.findByExpireAtBeforeAndStatus(any(),anyString()))
+                .willReturn(reservations);
+
+        // when
+        reservationService.expireReservation();
+
+        // then
+        reservations.forEach(reservation
+                -> Assertions.assertEquals("available", reservation.getConcertSeat().getStatus()));
 
     }
 
+    @Test
+    void 결제완료시_예약이_완료상태로_변경된다(){
+        // given
+        Reservation reservedReservation = Reservation
+                .builder()
+                .status("reserved")
+                .build();
+
+        // when
+        reservedReservation.completeReservation();
+
+        // then
+        Assertions.assertEquals("completed", reservedReservation.getStatus());
+    }
 }

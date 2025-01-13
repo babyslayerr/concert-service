@@ -50,12 +50,10 @@ public class ReservationService {
 
         reservationList.forEach(reservation -> {
             reservation.expire();
+            // 예약과 매핑된 좌석을 예약 가능한 상태로 변경
+            reservation.getConcertSeat().setAvailableStatus(); // 트랜잭션 종료시점에 반영
             reservationRepository.save(reservation);
         });
-
-        if(reservationList.isEmpty()){
-            System.out.println("Processed expired reservations: " + reservationList.size());
-        }
         return reservationList;
     }
 }

@@ -1,15 +1,16 @@
 package kr.hhplus.be.server.domain.concert;
 
 import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,34 +20,34 @@ public class ConcertService {
 
     private final ConcertSeatRepository concertSeatRepository;
 
-    public List<ConcertScheduleResponse> getAvailableConcertDates(Long concertId, Pageable pageable) {
+    public Page<ConcertSchedule> getAvailableConcert(Long concertId, Pageable pageable) {
 
-        Page<ConcertSchedule> concertScheduleList = concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable);
-        // 날짜만 추출
-        List<ConcertScheduleResponse> concertScheduleResponseList = concertScheduleList.stream()
-                .map((concertSchedule) -> {
-                    return ConcertScheduleResponse.builder()
-                            .id(concertSchedule.getId())
-                            .createdDate(concertSchedule.getConcertDate())
-                            .build();
-                }).toList();
+        Page<ConcertSchedule> concertScheduleList = new PageImpl<>(new ArrayList<>(), PageRequest.of(0,10),0);
 
-        return concertScheduleResponseList;
+        // 콘서트ID를 파라미터로 받지 않은 경우
+        if(concertId == null) {
+            concertScheduleList = concertScheduleRepository.findAllOrderByConcertDateAsc(pageable);
+        }
+        // 콘서트ID를 받은 경우
+        if(concertId != null){
+            concertScheduleList = concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable);
+            if(concertScheduleList.isEmpty()){
+                throw new NoSuchElementException("콘서트 스케줄을 찾을 수 없습니다.");
+            }
+        }
+
+
+
+        return concertScheduleList;
     }
 
-    public List<ConcertSeatResponse> getAvailableSeats(Long concertScheduleId) {
+    public List<ConcertSeat> getAvailableSeats(Long concertScheduleId) {
 
         List<ConcertSeat> availableSeats = concertSeatRepository.findByConcertScheduleIdAndStatus(concertScheduleId,"available");
-        List<ConcertSeatResponse> responsesList = availableSeats.stream()
-                .map((concertSeat) ->
-                        ConcertSeatResponse.builder()
-                                .id(concertSeat.getId())
-                                .seatNo(concertSeat.getSeatNo())
-                                .price(concertSeat.getPrice())
-                                .status(concertSeat.getStatus())
-                                .build()
-                ).toList();
-        return responsesList;
+        if(availableSeats.size() == 0){
+            throw new NoSuchElementException("예약가능한 좌석이 없습니다.");
+        }
+        return availableSeats;
     }
 
     // facade 호출
@@ -64,7 +65,8 @@ public class ConcertService {
         return concertSeatRepository.findById(concertSeatId).orElseThrow();
     }
 
-    public ConcertSeat saveConcertSeat(ConcertSeat concertSeat) {
+    public ConcertSeat changeConcertSeatCompleted(ConcertSeat concertSeat) {
+        concertSeat.setCompletedStatus();
         return concertSeatRepository.save(concertSeat);
     }
 }

@@ -17,6 +17,7 @@ public class ConcertSeat {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long seatNo;
+    // available, reserved, completed
     private String status;
     private Long price;
 
@@ -40,7 +41,7 @@ public class ConcertSeat {
         this.status = "completed";
     }
 
-    public void setReservedStatus() {
-        this.status = "reserved";
+    public void setAvailableStatus() {
+        this.status = "available";
     }
 }

@@ -7,11 +7,10 @@ import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.facade.reservation.ReservationFacade;
-import kr.hhplus.be.server.presentation.reservation.dto.ReservationResponse;
+import kr.hhplus.be.server.application.reservation.ReservationFacade;
+import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -99,7 +98,7 @@ public class ReservationFacadeTest {
         inOrder.verify(userService).makePayment(any(), any());
 
         // 4. 좌석 상태 변경
-        inOrder.verify(concertService).saveConcertSeat(any());
+        inOrder.verify(concertService).changeConcertSeatCompleted(any());
 
         // 5. 예약 상태 변경
         inOrder.verify(reservationService).completeReservation(any());

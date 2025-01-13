@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.presentation.reservation.dto;
+package kr.hhplus.be.server.application.reservation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.util.Assert;
