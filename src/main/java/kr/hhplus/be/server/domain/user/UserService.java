@@ -3,6 +3,8 @@ package kr.hhplus.be.server.domain.user;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.presentation.user.dto.UserBalanceHistoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -13,6 +15,7 @@ public class UserService {
 
     private final UserBalanceHistoryRepository userBalanceHistoryRepository;
     private final UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Transactional
     public Long getBalance(Long userId) {
@@ -24,7 +27,9 @@ public class UserService {
     public UserBalanceHistoryResponse chargeAmount(Long userId, Long amount) {
         // user 내 잔액 저장
         User user = userRepository.findById(userId).orElseThrow();
-        if(amount < 0 || amount > 1000000) throw new IllegalArgumentException("잘못된 충전 금액입니다.");
+        if(amount < 0 || amount > 1000000) {
+            log.error("amount is under 0 or over 1000000");
+            throw new IllegalArgumentException("잘못된 충전 금액입니다.");};
         user.setBalance(user.getBalance()+amount);
         userRepository.save(user);
 
@@ -43,14 +48,16 @@ public class UserService {
     }
 
     public User findUserById(Long userId){
-        return userRepository.findById(userId).orElseThrow(()->
-                new NoSuchElementException("유저를 찾을 수 없습니다.")
-                );
+        return userRepository.findById(userId).orElseThrow(()-> {
+            log.error("cannot found user");
+            return new NoSuchElementException("유저를 찾을 수 없습니다.");
+        });
     }
 
     public UserBalanceHistory makePayment(Long userId, Long price) {
         User user = userRepository.findById(userId).orElseThrow();
         if(user.getBalance() < price){
+            log.error("not enough balance, balance: {}, price: {}",user.getBalance(),price);
             throw new IllegalArgumentException("잔액이 부족합니다.");
         }
 
