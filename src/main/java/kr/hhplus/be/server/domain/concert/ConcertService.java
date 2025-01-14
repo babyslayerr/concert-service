@@ -2,10 +2,7 @@ package kr.hhplus.be.server.domain.concert;
 
 import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,17 +17,17 @@ public class ConcertService {
 
     private final ConcertSeatRepository concertSeatRepository;
 
-    public Page<ConcertSchedule> getAvailableConcert(Long concertId, Pageable pageable) {
-
+    public Page<ConcertSchedule> getAvailableConcert(Long concertId, Pageable RequestPageable) {
+        Pageable pageable = PageRequest.of(RequestPageable.getPageNumber(), RequestPageable.getPageSize(), Sort.by("concertDate"));
         Page<ConcertSchedule> concertScheduleList = new PageImpl<>(new ArrayList<>(), PageRequest.of(0,10),0);
 
         // 콘서트ID를 파라미터로 받지 않은 경우
         if(concertId == null) {
-            concertScheduleList = concertScheduleRepository.findAllOrderByConcertDateAsc(pageable);
+            concertScheduleList = concertScheduleRepository.findAll(pageable);
         }
         // 콘서트ID를 받은 경우
         if(concertId != null){
-            concertScheduleList = concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable);
+            concertScheduleList = concertScheduleRepository.findByConcertId(concertId,pageable);
             if(concertScheduleList.isEmpty()){
                 throw new NoSuchElementException("콘서트 스케줄을 찾을 수 없습니다.");
             }
