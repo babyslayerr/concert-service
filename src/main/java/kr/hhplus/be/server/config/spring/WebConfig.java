@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.config.spring;
 
+import kr.hhplus.be.server.common.interceptor.HttpLoggingInterceptor;
 import kr.hhplus.be.server.common.interceptor.QueueInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +13,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final QueueInterceptor queueInterceptor;
 
+    private final HttpLoggingInterceptor httpLoggingInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 인터셉터 등록 및 경로 설정
+        // 로그 인터셉터 등록
+        registry.addInterceptor(httpLoggingInterceptor)
+                        .addPathPatterns("/**");
+
+
+        // 토큰 인터셉터 등록 및 경로 설정
         registry.addInterceptor(queueInterceptor)
                 .addPathPatterns("/**") // 모든 경로에 대해 인터셉터 적용
                 .excludePathPatterns("/token/status", "/token","/swagger-ui/**",
