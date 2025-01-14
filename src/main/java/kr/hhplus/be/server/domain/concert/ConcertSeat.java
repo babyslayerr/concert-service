@@ -30,7 +30,7 @@ public class ConcertSeat {
     private ConcertSchedule concertSchedule;
 
 
-    public void reserve(User user) {
+    public void reserved(User user) {
         // available -> reserved
         this.status = "reserved";
         // set userId

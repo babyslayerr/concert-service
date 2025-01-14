@@ -17,11 +17,11 @@ public class ReservationService {
 
     // 예약 생성
     // facade 에 트랜잭션 걸려있음
-    public Reservation makeReservation(Long userId, Long concertSeatId, Long price) {
+    public Reservation makeReservation(User user, ConcertSeat concertSeat, Long price) {
 
         Reservation reservation = Reservation.builder()
-                .user(User.builder().id(userId).build())
-                .concertSeat(ConcertSeat.builder().id(concertSeatId).build())
+                .user(user)
+                .concertSeat(concertSeat)
                 .price(price)
                 .status("reserved")
                 .statusUpdateAt(LocalDateTime.now())
@@ -33,7 +33,7 @@ public class ReservationService {
     }
 
     // 예약 완료(결제 완료 상태)
-    // facade 에 트랜잭션 걸려있음
+    @Transactional
     public void completeReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
         if(reservation.getStatus().equals("expired")){
@@ -44,6 +44,7 @@ public class ReservationService {
     }
 
     // 예약만료 스케줄러에서 사용하는 예약만료
+    @Transactional
     public List<Reservation> expireReservation() {
         // 만료시간이 현재 시간보다 뒤에 있으면 만료 처리 (만료시간 < 현재시간) -> 만료
         List<Reservation> reservationList = reservationRepository.findByExpireAtBeforeAndStatus(LocalDateTime.now(),"reserved");

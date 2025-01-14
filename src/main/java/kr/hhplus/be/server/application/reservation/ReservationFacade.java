@@ -25,10 +25,12 @@ public class ReservationFacade {
     // 콘서트 좌석 예약
     @Transactional
     public ReservationResponse reserveSeat(Long userId, Long concertScheduleId, Long seatNo) {
+        // 유저 조회
+        User user = userService.findUserById(userId);
         // 예약가능한 좌석 예약
-        ConcertSeat reserveSeat = concertService.reserveAvailableSeat(userId, concertScheduleId, seatNo);
+        ConcertSeat reserveSeat = concertService.reserveAvailableSeat(user, concertScheduleId, seatNo);
         // 예약 내역 생성
-        Reservation reservation = reservationService.makeReservation(userId, reserveSeat.getId(), reserveSeat.getPrice());
+        Reservation reservation = reservationService.makeReservation(user, reserveSeat, reserveSeat.getPrice());
 
         // Response 생성
         ReservationResponse response = ReservationResponse.fromEntity(reservation);

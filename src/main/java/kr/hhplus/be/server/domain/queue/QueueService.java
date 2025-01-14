@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.queue;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.application.queue.dto.QueueResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

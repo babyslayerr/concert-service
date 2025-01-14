@@ -51,11 +51,11 @@ public class ConcertService {
     }
 
     // facade 호출
-    public ConcertSeat reserveAvailableSeat(Long userId, Long concertScheduleId, Long seatNo) {
+    public ConcertSeat reserveAvailableSeat(User user, Long concertScheduleId, Long seatNo) {
         ConcertSeat seat = concertSeatRepository.findConcertSeatByConcertScheduleIdAndSeatNoAndStatus(concertScheduleId,seatNo,"available").orElseThrow();
         // 콘서트 예약정보 업데이트
 
-        seat.reserve(User.builder().id(userId).build());
+        seat.reserved(user);
         concertSeatRepository.save(seat);
         return seat;
     }

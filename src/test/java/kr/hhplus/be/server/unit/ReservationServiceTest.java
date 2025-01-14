@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
+import kr.hhplus.be.server.domain.user.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,16 +33,16 @@ public class ReservationServiceTest {
     @Test
     void 콘서트스케줄_유저아이디가_좌석이_주어지면_해당좌석을_예약한다(){
         // given
-        Long seatNo = 1L; // 좌석번호 1번
-        Long concertScheduleId = 1L; // 1번 콘서트
-        Long userId = 1L; // 1번 유저
+        Long price = 5000L;
+        ConcertSeat concertSeat = ConcertSeat.builder().build(); // 1번 콘서트
+        User user = User.builder().build();
 
         // 첫번째 인자로 받은 객체를 반환
         BDDMockito.given(reservationRepository.save(any(Reservation.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        Reservation savedReservation = reservationService.makeReservation(seatNo, concertScheduleId, userId);
+        Reservation savedReservation = reservationService.makeReservation(user, concertSeat, price);
 
         // then
         Assertions.assertEquals("reserved", savedReservation.getStatus());
