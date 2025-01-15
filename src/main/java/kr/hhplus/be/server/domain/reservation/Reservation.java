@@ -20,7 +20,7 @@ public class Reservation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne // 1:1 매핑에다가 연관관계 뎁스가 작기 때문에 지연로딩 사용 안함
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

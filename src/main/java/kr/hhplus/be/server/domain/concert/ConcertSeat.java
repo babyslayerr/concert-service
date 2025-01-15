@@ -21,12 +21,12 @@ public class ConcertSeat {
     private String status;
     private Long price;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY) // 연관계층이 많기 때문에 지연로딩으로 한다
-    @JoinColumn(name = "concertSchedule_id")
+    @JoinColumn(name = "concert_schedule_id")
     private ConcertSchedule concertSchedule;
 
 
