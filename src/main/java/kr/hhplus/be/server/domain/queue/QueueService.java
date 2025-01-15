@@ -22,9 +22,7 @@ public class QueueService {
     
     @Transactional
     public String getToken() {
-        Queue token = Queue.builder()
-                .uuid(UUID.randomUUID().toString())
-                .build();
+        Queue token = new Queue(UUID.randomUUID().toString());
         log.info("create token uuid: {}",token.getUuid());
         return queueRepository.save(token).getUuid();
     }
