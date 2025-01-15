@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.user;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.presentation.user.dto.UserBalanceHistoryResponse;
+import kr.hhplus.be.server.application.user.dto.UserBalanceHistoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,7 +2,7 @@ package kr.hhplus.be.server.unit;
 
 
 import kr.hhplus.be.server.domain.user.*;
-import kr.hhplus.be.server.presentation.user.dto.UserBalanceHistoryResponse;
+import kr.hhplus.be.server.application.user.dto.UserBalanceHistoryResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

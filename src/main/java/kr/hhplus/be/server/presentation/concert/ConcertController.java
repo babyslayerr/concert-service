@@ -22,21 +22,21 @@ public class ConcertController {
     private final ConcertFacade concertFacade;
 
     // 예약 가능 날짜 조회 API
-//    @Operation(summary = "예약 가능 날짜 조회 API")
-//    @GetMapping("/concert/available-dates/{concertId}")
-//    public ResponseEntity<Page<ConcertScheduleResponse>> getAvailableDates(
-//            @PathVariable("concertId") Long concertId, Pageable pageable
-//            ) {
-//        Page<ConcertScheduleResponse> availableConcertDates = concertFacade.getAvailableConcertDates(concertId, pageable);
-//
-//        return new ResponseEntity<>(availableConcertDates, HttpStatus.OK);
-//    }
-//
-//    // 예약 가능한 좌석 조회 API
-//    @Operation(summary = "예약 가능한 좌석 조회 API")
-//    @GetMapping("/concert/available-seats/{concertScheduleId}")
-//    public ResponseEntity<List<ConcertSeatResponse>> getAvailableSeats(
-//            @PathVariable(name = "concertScheduleId") Long concertScheduleId) {
-//        return ResponseEntity.ok(concertFacade.getAvailableSeats(concertScheduleId));
-//    }
+    @Operation(summary = "예약 가능 날짜 조회 API")
+    @GetMapping("/concert/available-dates/{concertId}")
+    public ResponseEntity<Page<ConcertScheduleResponse>> getAvailableDates(
+            @PathVariable("concertId") Long concertId, Pageable pageable
+            ) {
+        Page<ConcertScheduleResponse> availableConcertDates = concertFacade.getAvailableConcertDates(concertId, pageable);
+
+        return new ResponseEntity<>(availableConcertDates, HttpStatus.OK);
+    }
+
+    // 예약 가능한 좌석 조회 API
+    @Operation(summary = "예약 가능한 좌석 조회 API")
+    @GetMapping("/concert/available-seats/{concertScheduleId}")
+    public ResponseEntity<List<ConcertSeatResponse>> getAvailableSeats(
+            @PathVariable(name = "concertScheduleId") Long concertScheduleId) {
+        return ResponseEntity.ok(concertFacade.getAvailableSeats(concertScheduleId));
+    }
 }
