@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.presentation.concert.dto;
+package kr.hhplus.be.server.application.concert.dto;
 
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import lombok.Builder;

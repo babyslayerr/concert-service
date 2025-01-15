@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.unit;
 
 import kr.hhplus.be.server.domain.concert.*;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

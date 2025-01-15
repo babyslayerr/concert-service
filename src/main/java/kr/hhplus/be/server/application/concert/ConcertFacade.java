@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.application.concert;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.concert.ConcertService;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
+import kr.hhplus.be.server.application.concert.dto.ConcertScheduleResponse;
+import kr.hhplus.be.server.application.concert.dto.ConcertSeatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +20,7 @@ public class ConcertFacade {
 
     private final ConcertService concertService;
 
+    @Transactional
     public Page<ConcertScheduleResponse> getAvailableConcertDates(Long concertId, Pageable pageable){
         Page<ConcertSchedule> concertSchedulePage = concertService.getAvailableConcert(concertId, pageable);
         // 날짜만 추출
@@ -34,7 +36,8 @@ public class ConcertFacade {
         return response;
     }
 
-    List<ConcertSeatResponse> getAvailableSeats(Long concertScheduleId){
+    @Transactional
+    public List<ConcertSeatResponse> getAvailableSeats(Long concertScheduleId){
         List<ConcertSeat> availableSeats = concertService.getAvailableSeats(concertScheduleId);
         List<ConcertSeatResponse> response  = availableSeats.stream()
                 .map((concertSeat) ->
