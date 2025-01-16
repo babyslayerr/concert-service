@@ -129,62 +129,6 @@ public class ReservationFacadeTest {
     }
 
 
-//    @Test
-//    void 동시성_테스트_좌석_결제() throws InterruptedException, ExecutionException {
-//
-//        // given - 필요 데이터 삽입
-//        // 토큰 발급
-//        String uuid = queueService.getToken();
-//        // 유저 저장
-//        User user = userRepository.save(User.builder()
-//                .balance(10000L)
-//                .username("testUser")
-//                .build());
-//        // 콘서트 스케줄 저장
-//        ConcertSchedule concertSchedule = concertScheduleRepository.save(ConcertSchedule.builder()
-//                .concertDate(LocalDate.now())
-//                .build());
-//        // 콘서트 좌석 저장
-//        ConcertSeat concertSeat = concertSeatRepository.save(ConcertSeat.builder()
-//                .seatNo(1L)
-//                .price(5000L)
-//                .concertSchedule(concertSchedule)
-//                .build());
-//
-//        int threadCount = 10;
-//        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-//        CountDownLatch latch = new CountDownLatch(threadCount);
-//
-//        List<Future<Boolean>> results = new ArrayList<>();
-//
-//        for (int i = 0; i < threadCount; i++) {
-//            results.add(executorService.submit(() -> {
-//                latch.countDown(); // 모든 스레드가 준비될 때까지 대기
-//                latch.await();
-//                try {
-//                    // 좌석 예약
-//                    reservationFacade.reserveSeat(user.getId(), concertSchedule.getId(), concertSeat.getSeatNo());
-//                    return true; // 성공
-//                } catch (Exception e) {
-//                    return false; // 실패
-//                }
-//            }));
-//        }
-//
-//        executorService.shutdown();
-//        executorService.awaitTermination(10, TimeUnit.SECONDS);
-//
-//        // 테스트 결과 검증
-//        int successCount = 0;
-//        for (Future<Boolean> result : results) {
-//            if (result.get()) {
-//                successCount++;
-//            }
-//        }
-//
-//        // 한 번만 결제가 성공해야 함
-//        Assertions.assertEquals(1, successCount);
-//
-//    }
+
 
 }
