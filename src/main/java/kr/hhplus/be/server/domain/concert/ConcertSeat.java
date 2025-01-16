@@ -38,6 +38,8 @@ public class ConcertSeat {
     }
 
     public void setCompletedStatus() {
+        // 순서가 보장 되어야함(예약 상태에서 완료상태로)
+        if(!this.status.equals("reserved")) throw new IllegalStateException("좌석이 예약상태가 아닙니다.");
         this.status = "completed";
     }
 
