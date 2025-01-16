@@ -7,10 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -48,7 +45,7 @@ public class ConcertServiceTest {
                 .build();
         List<ConcertSchedule> mockList = new ArrayList<>();
         mockList.add(concertSchedule);
-        Pageable pageable = PageRequest.of(1, 10);
+        Pageable pageable = PageRequest.of(1, 10,Sort.by("concertDate"));
         Page<ConcertSchedule> mockPage = new PageImpl<>(mockList, pageable, mockList.size());
         given(concertScheduleRepository.findByConcertId(concertId, pageable))
                 .willReturn(mockPage);
@@ -101,7 +98,7 @@ public class ConcertServiceTest {
     void 특정콘서트ID가_주어졌지만_해당하는_스케줄이_없는경우_NoSuchElementException이_반환된다(){
         // given
         Long concertId = 1000L;
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 10,Sort.by("concertDate"));
         given(concertScheduleRepository.findByConcertId(concertId,pageable))
                 .willReturn(new PageImpl<>(new ArrayList<>(),pageable,0));
 
