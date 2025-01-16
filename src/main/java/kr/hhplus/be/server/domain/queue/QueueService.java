@@ -19,15 +19,13 @@ public class QueueService {
     private final QueueRepository queueRepository;
 
     private static final Logger log = LoggerFactory.getLogger(QueueService.class);
-    
-    @Transactional
+
     public String getToken() {
         Queue token = new Queue(UUID.randomUUID().toString());
         log.info("create token uuid: {}",token.getUuid());
         return queueRepository.save(token).getUuid();
     }
 
-    @Transactional
     public Queue checkStatus(String uuid) {
         Queue queue = queueRepository.findByUuid(uuid).orElseThrow();
 

@@ -17,13 +17,11 @@ public class UserService {
     private final UserRepository userRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    @Transactional
     public Long getBalance(Long userId) {
         User user = userRepository.findById(userId).orElseThrow();
         return user.getBalance();
     }
 
-    @Transactional
     public UserBalanceHistoryResponse chargeAmount(Long userId, Long amount) {
         // user 내 잔액 저장
         User user = userRepository.findById(userId).orElseThrow();
