@@ -88,18 +88,6 @@ public class UserServiceTest {
                         userService.chargeAmount(userId, amount)
         );
     }
-    @Test
-    void 잔액_최대량은_마이너스가_될수없다(){
-
-        // given
-        User user = User.builder().build();
-
-        // when, then
-        Assertions.assertThrows(IllegalArgumentException.class,
-                ()-> {
-                    user.setBalance(10000001L);
-                });
-    }
 
     @Test
     void 사용자와금액이_주어지면_잔액이_충전되고_충전내역이_반환된다(){

@@ -25,10 +25,8 @@ public class UserService {
     public UserBalanceHistoryResponse chargeAmount(Long userId, Long amount) {
         // user 내 잔액 저장
         User user = userRepository.findById(userId).orElseThrow();
-        if(amount < 0 || amount > 1000000) {
-            log.warn("amount is under 0 or over 1000000");
-            throw new IllegalArgumentException("잘못된 충전 금액입니다.");};
-        user.setBalance(user.getBalance()+amount);
+
+        user.chargeAmount(amount);
         userRepository.save(user);
 
         // user 잔액 히스토리 저장
@@ -54,13 +52,9 @@ public class UserService {
 
     public UserBalanceHistory makePayment(Long userId, Long price) {
         User user = userRepository.findById(userId).orElseThrow();
-        if(user.getBalance() < price){
-            log.warn("not enough balance, balance: {}, price: {}",user.getBalance(),price);
-            throw new IllegalArgumentException("잔액이 부족합니다.");
-        }
 
-        // 잔액이 충분하면 결제
-        user.setBalance(user.getBalance()-price);
+        // 잔액 차감
+        user.debitBalance(price);
         userRepository.save(user);
 
         // 사용내역 저장
