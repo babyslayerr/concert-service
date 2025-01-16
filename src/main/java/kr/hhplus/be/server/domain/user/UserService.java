@@ -26,7 +26,7 @@ public class UserService {
         // user 내 잔액 저장
         User user = userRepository.findById(userId).orElseThrow();
         if(amount < 0 || amount > 1000000) {
-            log.error("amount is under 0 or over 1000000");
+            log.warn("amount is under 0 or over 1000000");
             throw new IllegalArgumentException("잘못된 충전 금액입니다.");};
         user.setBalance(user.getBalance()+amount);
         userRepository.save(user);
@@ -47,7 +47,7 @@ public class UserService {
 
     public User findUserById(Long userId){
         return userRepository.findById(userId).orElseThrow(()-> {
-            log.error("cannot found user");
+            log.warn("cannot found user");
             return new NoSuchElementException("유저를 찾을 수 없습니다.");
         });
     }
@@ -55,7 +55,7 @@ public class UserService {
     public UserBalanceHistory makePayment(Long userId, Long price) {
         User user = userRepository.findById(userId).orElseThrow();
         if(user.getBalance() < price){
-            log.error("not enough balance, balance: {}, price: {}",user.getBalance(),price);
+            log.warn("not enough balance, balance: {}, price: {}",user.getBalance(),price);
             throw new IllegalArgumentException("잔액이 부족합니다.");
         }
 

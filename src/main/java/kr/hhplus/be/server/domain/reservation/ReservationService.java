@@ -40,7 +40,7 @@ public class ReservationService {
     public void completeReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow();
         if(reservation.getStatus().equals("expired")){
-            log.error("reservation status already expired");
+            log.warn("reservation status already expired");
             throw new IllegalStateException("만료된 예약입니다.");
         }
         reservation.completeReservation();
