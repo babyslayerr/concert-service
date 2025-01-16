@@ -2,6 +2,8 @@ package kr.hhplus.be.server.domain.queue;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,16 +18,14 @@ public class QueueService {
 
     private final QueueRepository queueRepository;
 
-    @Transactional
-    public String getToken() {
-        Queue token = Queue.builder()
-                .uuid(UUID.randomUUID().toString())
-                .build();
+    private static final Logger log = LoggerFactory.getLogger(QueueService.class);
 
+    public String getToken() {
+        Queue token = new Queue(UUID.randomUUID().toString());
+        log.info("create token uuid: {}",token.getUuid());
         return queueRepository.save(token).getUuid();
     }
 
-    @Transactional
     public Queue checkStatus(String uuid) {
         Queue queue = queueRepository.findByUuid(uuid).orElseThrow();
 
@@ -47,6 +47,7 @@ public class QueueService {
     public void expireTokens() {
         // 활성화 된 것들중에 만료시간이 지난 것
         List<Queue> expiredTokens = queueRepository.findByIsActiveAndExpireAtBefore("active", LocalDateTime.now());
+        log.info("expire token count: {}",expiredTokens.size());
         expiredTokens.forEach(queue -> {
             // 토큰 삭제
             queueRepository.delete(queue); // 상태 저장
@@ -63,6 +64,7 @@ public class QueueService {
             long remainingSlots = (totalSlot - activeCount);
             Pageable pageable = PageRequest.of(0, (int) remainingSlots);
             List<Queue> tokensForActive = queueRepository.findByIsActiveOrderByCreatedDateAsc("wait",pageable);
+            log.info("active token count: {}",tokensForActive.size());
             tokensForActive.forEach(queue -> {
                 queue.activate(); // 상태를 active 로 변경
                 queueRepository.save(queue); // 상태 저장

@@ -1,10 +1,7 @@
 package kr.hhplus.be.server.application.reservation.dto;
 
-import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.reservation.Reservation;
-import kr.hhplus.be.server.domain.user.User;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
+import kr.hhplus.be.server.application.concert.dto.ConcertSeatResponse;
 import lombok.Builder;
 import lombok.Getter;
 

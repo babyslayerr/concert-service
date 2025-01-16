@@ -24,6 +24,8 @@ public class UserBalanceHistory {
     private Long balance;
 
     public void setChargeHistory(User user,Long balance ,Long amount) {
+        // 잔액이 충전금액보다 적으면 잘못된 파라미터
+        if(balance < amount) throw new IllegalArgumentException("잔액이 충전된 금액보다 작을 수 없습니다.");
         this.user = user;
         this.amount = amount;
         this.actionType = "charge";

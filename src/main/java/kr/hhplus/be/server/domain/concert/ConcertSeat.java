@@ -21,12 +21,12 @@ public class ConcertSeat {
     private String status;
     private Long price;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY) // 연관계층이 많기 때문에 지연로딩으로 한다
-    @JoinColumn(name = "concertSchedule_id")
+    @JoinColumn(name = "concert_schedule_id")
     private ConcertSchedule concertSchedule;
 
 
@@ -38,6 +38,8 @@ public class ConcertSeat {
     }
 
     public void setCompletedStatus() {
+        // 순서가 보장 되어야함(예약 상태에서 완료상태로)
+        if(!this.status.equals("reserved")) throw new IllegalStateException("좌석이 예약상태가 아닙니다.");
         this.status = "completed";
     }
 

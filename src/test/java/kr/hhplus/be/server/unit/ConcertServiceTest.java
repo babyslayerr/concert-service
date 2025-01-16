@@ -1,8 +1,6 @@
 package kr.hhplus.be.server.unit;
 
 import kr.hhplus.be.server.domain.concert.*;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertScheduleResponse;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +50,7 @@ public class ConcertServiceTest {
         mockList.add(concertSchedule);
         Pageable pageable = PageRequest.of(1, 10);
         Page<ConcertSchedule> mockPage = new PageImpl<>(mockList, pageable, mockList.size());
-        given(concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId, pageable))
+        given(concertScheduleRepository.findByConcertId(concertId, pageable))
                 .willReturn(mockPage);
 
 
@@ -88,7 +86,7 @@ public class ConcertServiceTest {
                 .build()
         );
         PageImpl<ConcertSchedule> concertSchedulePage = new PageImpl<>(scheduleList, PageRequest.of(0, 10), scheduleList.size());
-        given(concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(any(),any()))
+        given(concertScheduleRepository.findByConcertId(any(),any()))
                 .willReturn(concertSchedulePage);
 
         // when
@@ -104,7 +102,7 @@ public class ConcertServiceTest {
         // given
         Long concertId = 1000L;
         Pageable pageable = PageRequest.of(0, 10);
-        given(concertScheduleRepository.findByConcertIdOrderByConcertDateAsc(concertId,pageable))
+        given(concertScheduleRepository.findByConcertId(concertId,pageable))
                 .willReturn(new PageImpl<>(new ArrayList<>(),pageable,0));
 
         // when, then

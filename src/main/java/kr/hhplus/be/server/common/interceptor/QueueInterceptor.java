@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.common.interceptor;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.hhplus.be.server.application.queue.QueueFacade;
@@ -19,7 +20,15 @@ public class QueueInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // UUID를 요청 헤더나 파라미터에서 가져옴
-        String uuid = request.getHeader("queue-uuid");
+        Cookie[] cookies = request.getCookies();
+        String uuid = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("queue-uuid".equals(cookie.getName())) {
+                    uuid = cookie.getValue();
+                }
+            }
+        }
 
         // UUID가 없는 경우 요청 차단
         if (uuid == null || uuid.isEmpty()) {

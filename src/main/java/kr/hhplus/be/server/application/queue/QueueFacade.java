@@ -27,4 +27,10 @@ public class QueueFacade {
 
         return queueResponse;
     }
+
+    @Transactional
+    public String getToken(){
+        String token = queueService.getToken();
+        return token;
+    }
 }

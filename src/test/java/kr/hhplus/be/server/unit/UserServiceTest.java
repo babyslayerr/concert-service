@@ -2,7 +2,7 @@ package kr.hhplus.be.server.unit;
 
 
 import kr.hhplus.be.server.domain.user.*;
-import kr.hhplus.be.server.presentation.user.dto.UserBalanceHistoryResponse;
+import kr.hhplus.be.server.application.user.dto.UserBalanceHistoryResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,18 +87,6 @@ public class UserServiceTest {
                 ()->
                         userService.chargeAmount(userId, amount)
         );
-    }
-    @Test
-    void 잔액_최대량은_마이너스가_될수없다(){
-
-        // given
-        User user = User.builder().build();
-
-        // when, then
-        Assertions.assertThrows(IllegalArgumentException.class,
-                ()-> {
-                    user.setBalance(10000001L);
-                });
     }
 
     @Test

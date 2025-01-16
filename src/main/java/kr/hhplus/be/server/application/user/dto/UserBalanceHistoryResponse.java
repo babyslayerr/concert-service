@@ -1,11 +1,7 @@
-package kr.hhplus.be.server.presentation.user.dto;
+package kr.hhplus.be.server.application.user.dto;
 
-import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Builder
 @Getter

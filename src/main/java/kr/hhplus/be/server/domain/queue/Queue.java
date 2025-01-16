@@ -25,10 +25,12 @@ public class Queue {
     private String isActive = "wait";
     private LocalDateTime expireAt;
 
+    public Queue(String uuid){
+        this.uuid = uuid;
+    }
+
     public void activate() {
         isActive = "active";
         expireAt = LocalDateTime.now().plusMinutes(30);
     }
-
-
 }

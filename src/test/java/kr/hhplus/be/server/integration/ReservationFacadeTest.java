@@ -62,9 +62,10 @@ public class ReservationFacadeTest {
 
 
         // when
-        ReservationResponse response = reservationFacade.reserveSeat(user.getId(), concertSchedule.getId(), concertSeat.getSeatNo());
+        ReservationResponse reservation = reservationFacade.reserveSeat(user.getId(), concertSchedule.getId(), concertSeat.getSeatNo());
 
         // then
+        Reservation response = reservationRepository.findById(reservation.getId()).orElseThrow();
         Assertions.assertNotNull(response);
         Assertions.assertEquals(5000L,response.getPrice());
         Assertions.assertEquals("reserved",response.getStatus());
@@ -76,6 +77,8 @@ public class ReservationFacadeTest {
         // given - 필요 데이터 삽입
         // 토큰 발급
         String uuid = queueService.getToken();
+        // 강제 액티브
+        queueService.activateTokens();
         // 유저 저장
         User user = userRepository.save(User.builder()
                 .balance(10000L)
@@ -92,6 +95,7 @@ public class ReservationFacadeTest {
                 .concertSchedule(concertSchedule)
                 .status("available")
                 .build());
+
         // 예약 처리
         ReservationResponse response = reservationFacade.reserveSeat(user.getId(), concertSchedule.getId(), concertSeat.getSeatNo());
 

@@ -8,7 +8,6 @@ import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationService;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
-import kr.hhplus.be.server.presentation.concert.dto.ConcertSeatResponse;
 import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
