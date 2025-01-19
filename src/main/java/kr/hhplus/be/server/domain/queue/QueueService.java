@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.queue;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,6 +28,10 @@ public class QueueService {
     }
 
     public Queue checkStatus(String uuid) {
+        // UUID가 없는 경우 요청 차단
+        if (uuid == null || uuid.isEmpty()) {
+            throw new NullPointerException("Missing token UUID");
+        }
         Queue queue = queueRepository.findByUuid(uuid).orElseThrow();
 
         // 만약 active 상태면 그대로 반환

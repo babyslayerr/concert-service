@@ -35,7 +35,7 @@ public class QueueController {
     @Operation(summary = "대기열 상태 확인 API")
     @GetMapping("/token/status")
     public ResponseEntity<QueueResponse> getQueueStatus(@RequestParam(name = "uuid") String uuid) {
-        QueueResponse queueResponse = queueFacade.checkStatus(uuid);
+        QueueResponse queueResponse = queueFacade.getStatus(uuid);
         return ResponseEntity.ok(queueResponse);
     }
 }
