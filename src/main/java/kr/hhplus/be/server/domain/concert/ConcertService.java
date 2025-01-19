@@ -79,4 +79,14 @@ public class ConcertService {
         ConcertSeat reservedConcertSeat = concertSeatRepository.save(concertSeat);
         return reservedConcertSeat;
     }
+
+    public void makeSeatsAvailable(List<ConcertSeat> concertSeats) {
+        concertSeats.stream().forEach(
+                concertSeat -> {
+                    // 예약과 매핑된 좌석을 예약 가능한 상태로 변경
+                    concertSeat.setAvailableStatus();
+                    concertSeatRepository.save(concertSeat);
+                }
+        );
+    }
 }
