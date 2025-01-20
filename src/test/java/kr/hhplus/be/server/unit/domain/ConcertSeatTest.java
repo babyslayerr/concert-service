@@ -26,6 +26,41 @@ public class ConcertSeatTest {
         assertEquals("reserved",availableSeat.getStatus());
         assertEquals(user,availableSeat.getUser());
 
+    }
+
+    @Test
+    void 콘서트좌석은_기존예약이_있을시_예약상태로_변경할수없다(){
+
+        // given
+        // 예약자
+        User user = new User();
+        // 콘서트 좌석 생성
+        ConcertSeat reservedSeat = ConcertSeat.builder()
+                .status("reserved")
+                .build();
+
+        // when, then
+        assertThrows(IllegalStateException.class,()->{
+            reservedSeat.reserved(user);
+        });
+
+    }
+
+    @Test
+    void 콘서트좌석은_기존예약이_완료시_예약상태로_변경할수없다(){
+
+        // given
+        // 예약자
+        User user = new User();
+        // 콘서트 좌석 생성
+        ConcertSeat reservedSeat = ConcertSeat.builder()
+                .status("completed")
+                .build();
+
+        // when, then
+        assertThrows(IllegalStateException.class,()->{
+            reservedSeat.reserved(user);
+        });
 
     }
 
