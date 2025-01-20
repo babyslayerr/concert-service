@@ -31,6 +31,7 @@ public class ConcertSeat {
 
 
     public void reserved(User user) {
+        if(this.status.equals("reserved") || this.status.equals("completed")) throw new IllegalStateException("좌석이 이미 예약되거나 완료된 상태입니다.");
         // available -> reserved
         this.status = "reserved";
         // set userId
