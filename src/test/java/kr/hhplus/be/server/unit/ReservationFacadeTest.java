@@ -44,14 +44,15 @@ public class ReservationFacadeTest {
         Long userId = 1L;
         Long concertScheduleId = 1L;
         Long seatNo = 1L;
+        ConcertSeat concertSeat = ConcertSeat.builder()
+                .id(1L)
+                .price(10000L)
+                .build();
         given(concertService.reserveAvailableSeat(any(), any(), any()))
-                .willReturn(ConcertSeat.builder()
-                        .id(1L)
-                        .price(10000L)
-                        .build());
+                .willReturn(concertSeat);
 
         given(reservationService.makeReservation(any(),any(),any()))
-                .willReturn(Reservation.builder().build());
+                .willReturn(Reservation.builder().concertSeat(concertSeat).build());
 
         InOrder inOrder = inOrder(concertService, reservationService);
 
