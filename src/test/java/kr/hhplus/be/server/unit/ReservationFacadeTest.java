@@ -80,8 +80,6 @@ public class ReservationFacadeTest {
                 .build();
 
         given(concertService.findConcertSeatById(concertSeatId)).willReturn(mockConcertSeat);
-        given(userService.findUserById(userId)).willReturn(mockUser);
-
 
         // when
         reservationFacade.makeSeatPayment(userId, concertSeatId, reservationId, tokenUuid);
@@ -91,19 +89,16 @@ public class ReservationFacadeTest {
         // 1. 좌석 조회
         inOrder.verify(concertService).findConcertSeatById(any());
 
-        // 2. 사용자 조회
-        inOrder.verify(userService).findUserById(any());
-
-        // 3. 결제 요청
+        // 2. 결제 요청
         inOrder.verify(userService).makePayment(any(), any());
 
-        // 4. 좌석 상태 변경
+        // 3. 좌석 상태 변경
         inOrder.verify(concertService).changeConcertSeatCompleted(any());
 
-        // 5. 예약 상태 변경
+        // 4. 예약 상태 변경
         inOrder.verify(reservationService).completeReservation(any());
 
-        // 6. 토큰 삭제
+        // 5. 토큰 삭제
         inOrder.verify(queueService).removeToken(any());
 
     }
