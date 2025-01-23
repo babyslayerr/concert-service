@@ -22,6 +22,9 @@ public class User {
     @Column
     private Long balance;
 
+    @Version
+    private int version;
+
     // 잔액 충전
     public void chargeAmount(Long amount) {
         if(amount < 0 || amount > 1000000) {

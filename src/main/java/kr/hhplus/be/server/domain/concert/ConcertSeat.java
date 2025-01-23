@@ -29,6 +29,10 @@ public class ConcertSeat {
     @JoinColumn(name = "concert_schedule_id")
     private ConcertSchedule concertSchedule;
 
+    @Version
+    @Column(nullable = false)
+    private int version;
+
 
     public void reserved(User user) {
         if(this.status.equals("reserved") || this.status.equals("completed")) throw new IllegalStateException("좌석이 이미 예약되거나 완료된 상태입니다.");
