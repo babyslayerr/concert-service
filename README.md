@@ -21,3 +21,5 @@ docker-compose up -d
 ### [API 명세서](https://github.com/babyslayerr/hhplus-week3/wiki/API-%EB%AA%85%EC%84%B8%EC%84%9C)
 
 ### [Swagger_APIDocs](https://github.com/babyslayerr/hhplus-week3/wiki/API%E2%80%90Docs(swagger))
+
+### [동시성 제어 분석 및 구현 보고서](https://velog.io/@babyslayerr/%EB%8F%99%EC%8B%9C%EC%84%B1-%EC%A0%9C%EC%96%B4)
