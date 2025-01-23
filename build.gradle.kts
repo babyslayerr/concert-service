@@ -33,7 +33,10 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 	implementation("org.projectlombok:lombok")
 
+	// redisson
+	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
+	implementation ("org.springframework.boot:spring-boot-starter-aop")
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 	// runtimeOnly("com.h2database:h2")
@@ -54,3 +57,6 @@ tasks.withType<Test> {
 	systemProperty("user.timezone", "UTC")
 }
 
+tasks.withType<JavaCompile> {
+	options.compilerArgs.add("-parameters")
+}
