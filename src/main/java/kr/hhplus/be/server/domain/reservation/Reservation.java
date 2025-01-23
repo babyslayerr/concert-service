@@ -33,6 +33,10 @@ public class Reservation {
     private LocalDateTime statusUpdateAt;
     private LocalDateTime expireAt;
 
+    @Version
+    @Column(nullable = false)
+    private int version;
+
     public void completeReservation() {
         if(!this.status.equals("reserved")) throw new IllegalStateException("예약이 예약된 상태여야 합니다.");
         this.status = "completed";

@@ -45,7 +45,7 @@ public class ReservationService {
         }
         reservation.completeReservation();
         log.info("Reservation Status: {}",reservation.getStatus());
-        reservationRepository.save(reservation);
+        reservationRepository.flush();
     }
 
     // 예약만료 스케줄러에서 사용하는 예약만료
