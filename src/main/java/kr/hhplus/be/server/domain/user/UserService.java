@@ -27,7 +27,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow();
 
         user.chargeAmount(amount);
-        userRepository.save(user);
+        userRepository.flush();
 
         // user 잔액 히스토리 저장
         UserBalanceHistory userBalanceHistory = new UserBalanceHistory();
@@ -53,9 +53,9 @@ public class UserService {
     public UserBalanceHistory makePayment(Long userId, Long price) {
         User user = userRepository.findById(userId).orElseThrow();
 
-        // 잔액 차감
+        // 잔액 차감 versioning 을 통한 동시성 제어중
         user.debitBalance(price);
-        userRepository.save(user);
+        userRepository.flush();
 
         // 사용내역 저장
         UserBalanceHistory userBalanceHistory = new UserBalanceHistory();
