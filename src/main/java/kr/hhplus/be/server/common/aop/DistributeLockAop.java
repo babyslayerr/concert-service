@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.common.aop;
 
 import kr.hhplus.be.server.common.annotation.DistributeLock;
-import kr.hhplus.be.server.config.redisson.AopForTransaction;
 import kr.hhplus.be.server.config.redisson.CustomSpringELParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,6 @@ public class DistributeLockAop {
     private static final String REDISSON_KEY_PREFIX = "RLOCK_";
 
     private final RedissonClient redissonClient;
-    private final AopForTransaction aopForTransaction;
 
     @Around("@annotation(kr.hhplus.be.server.common.annotation.DistributeLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -41,9 +39,9 @@ public class DistributeLockAop {
             if (!available) {
                 return false;
             }
-
             log.info("get lock success {}" , key);
-            return aopForTransaction.proceed(joinPoint);    // 락과 트랜잭션 순서를 보장하기 위한 클래스
+            // proxy 객체로서 최종적으로 메서드 실행 후 값 전달
+            return joinPoint.proceed();
         } catch (Exception e) {
             Thread.currentThread().interrupt();
             throw new InterruptedException();
