@@ -21,7 +21,7 @@ public class QueueFacade {
         QueueResponse queueResponse = QueueResponse.fromEntity(queue);
 
         // wait 상태일경우 대기자인원수 추가
-        if(queueResponse.getIsActive().equals("wait")){
+        if(queueResponse.isWaiting()){
             long waitingCount = queueService.getWaitingCount(queue);
             queueResponse.setWaitingCount(waitingCount);
         }
@@ -35,7 +35,7 @@ public class QueueFacade {
         Queue queue = queueService.checkStatus(uuid);
 
         // wait 상태일경우 대기자인원수 추가
-        if(queue.getIsActive().equals("wait")){
+        if(queue.isWaiting()){
             long waitingCount = queueService.getWaitingCount(queue);
             throw new IllegalStateException("Access denied, waitingCount is : " + waitingCount);
         }
