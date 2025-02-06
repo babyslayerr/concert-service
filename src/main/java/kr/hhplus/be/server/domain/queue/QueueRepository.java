@@ -13,14 +13,17 @@ public interface QueueRepository {
 
     Optional<Queue> findByUuid(String uuid);
 
-    long countByCreatedDateBeforeAndIsActive(LocalDateTime createdDate,String isActive);
-
     void delete(Queue queue);
-
-    List<Queue> findByIsActiveAndExpireAtBefore(String active, LocalDateTime now);
 
     long countByIsActive(String active);
 
-
     List<Queue> findByIsActiveOrderByCreatedDateAsc(String isActive, Pageable pageable);
+
+    long countBeforeWaitingToken(String uuid);
+
+    long deleteExpiredTokens(int standardMinute);
+
+    long addActiveTokens(long count);
+
+    long countByIsActive();
 }

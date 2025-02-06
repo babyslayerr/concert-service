@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.domain.concert;
 
+import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
@@ -14,6 +16,8 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class ConcertService {
+
+    private final ConcertCacheRepository concertCacheRepository;
 
     private final ConcertScheduleRepository concertScheduleRepository;
 
@@ -88,5 +92,25 @@ public class ConcertService {
                     concertSeatRepository.save(concertSeat);
                 }
         );
+    }
+
+    public ConcertSchedule getConcertSchedule(Long concertScheduleId){
+
+        // cache aside 전략(service 가 cache miss 시 통제)
+
+        // 1. 캐시 hit
+        ConcertSchedule schedule = concertCacheRepository.getCachedConcertSchedule(concertScheduleId);
+        if (schedule != null) {
+            return schedule;
+        }
+
+        // 2. 캐시 Miss -> DB 조회
+        schedule = concertScheduleRepository.findById(concertScheduleId)
+                .orElseThrow(() -> new NoSuchElementException("콘서트 일정 없음"));
+
+        // 3. 조회된 데이터 Redis 에 저장
+        concertCacheRepository.saveConcertScheduleToCache(concertScheduleId, schedule);
+
+        return schedule;
     }
 }

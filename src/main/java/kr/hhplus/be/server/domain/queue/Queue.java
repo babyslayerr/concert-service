@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.domain.queue;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +19,9 @@ public class Queue {
     private Long id;
     private String uuid;
     private LocalDateTime createdDate = LocalDateTime.now();
-    private String isActive = "wait";
+    // waiting, active
+    @Enumerated(EnumType.STRING)
+    private QueueStatus isActive = QueueStatus.waiting;
     private LocalDateTime expireAt;
 
     public Queue(String uuid){
@@ -30,7 +29,21 @@ public class Queue {
     }
 
     public void activate() {
-        isActive = "active";
+        isActive = QueueStatus.waiting;
         expireAt = LocalDateTime.now().plusMinutes(30);
     }
+
+    public void setStatusActive() {
+        isActive = QueueStatus.active;
+    }
+
+    public void setStatusWait() {
+        isActive = QueueStatus.waiting;
+    }
+
+    public boolean isWaiting() {
+
+        return this.isActive.equals(QueueStatus.waiting);
+    }
+
 }
