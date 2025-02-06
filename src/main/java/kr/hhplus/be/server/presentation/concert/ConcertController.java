@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import kr.hhplus.be.server.application.concert.ConcertFacade;
 import kr.hhplus.be.server.application.concert.dto.ConcertScheduleResponse;
 import kr.hhplus.be.server.application.concert.dto.ConcertSeatResponse;
+import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,13 @@ public class ConcertController {
     public ResponseEntity<List<ConcertSeatResponse>> getAvailableSeats(
             @PathVariable(name = "concertScheduleId") Long concertScheduleId) {
         return ResponseEntity.ok(concertFacade.getAvailableSeats(concertScheduleId));
+    }
+
+    // 캐싱 기법 적용
+    @Operation(summary = "콘서트 스케줄 상세조회 API")
+    @GetMapping("/concert/{concertScheduleId}")
+    public ResponseEntity<ConcertScheduleResponse> ge(@PathVariable("concertScheduleId") Long concertScheduleId){
+        ConcertScheduleResponse concertScheduleResponse = concertFacade.getConcertSchedule(concertScheduleId);
+        return ResponseEntity.ok(concertScheduleResponse);
     }
 }

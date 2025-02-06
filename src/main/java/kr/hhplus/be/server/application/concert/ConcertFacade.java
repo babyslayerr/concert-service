@@ -50,4 +50,12 @@ public class ConcertFacade {
                 ).toList();
         return response;
     }
+
+    @Transactional
+    public ConcertScheduleResponse getConcertSchedule(Long concertScheduleId){
+        ConcertSchedule concertSchedule = concertService.getConcertSchedule(concertScheduleId);
+        ConcertScheduleResponse concertScheduleResponse = ConcertScheduleResponse.fromEntity(concertSchedule);
+        return concertScheduleResponse;
+
+    }
 }
