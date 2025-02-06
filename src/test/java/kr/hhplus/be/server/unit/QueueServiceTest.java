@@ -3,12 +3,13 @@ package kr.hhplus.be.server.unit;
 import kr.hhplus.be.server.domain.queue.Queue;
 import kr.hhplus.be.server.domain.queue.QueueRepository;
 import kr.hhplus.be.server.domain.queue.QueueService;
-import kr.hhplus.be.server.application.queue.dto.QueueResponse;
+import kr.hhplus.be.server.domain.queue.QueueStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,7 @@ public class QueueServiceTest {
                                 Queue.builder()
                                         .id(1L)
                                         .uuid(uuid)
-                                        .isActive("active")
+                                        .isActive(QueueStatus.active)
                                         .build()
                         ));
 
@@ -68,12 +69,10 @@ public class QueueServiceTest {
     void 토큰_만료시간이_지났으면_토큰이_만료된다(){
 
         // given
-        List<Queue> mockList = List.of(
-                Queue.builder().build(),
-                Queue.builder().build()
-        );
-        given(queueRepository.findByIsActiveAndExpireAtBefore(any(), any()))
-                .willReturn(mockList);
+        // 30분이 지나면 만료
+        int standardMinute = 30 * 60 * 1000;
+        given(queueRepository.deleteExpiredTokens(standardMinute))
+                .willReturn(0L);
         // when
         queueService.expireTokens();
 
@@ -110,7 +109,7 @@ public class QueueServiceTest {
                 .collect(Collectors.toList());
 
         Pageable pageable = PageRequest.of(0, 5);
-        given(queueRepository.findByIsActiveOrderByCreatedDateAsc("wait", pageable))
+        given(queueRepository.findByIsActiveOrderByCreatedDateAsc("waiting", pageable))
                 .willReturn(waitingTokens);
 
         // when
@@ -118,9 +117,23 @@ public class QueueServiceTest {
 
         // then
         // 대기 중인 토큰 5개가 활성화 되었는지 확인
-        verify(queueRepository).findByIsActiveOrderByCreatedDateAsc("wait", pageable);
+        verify(queueRepository).findByIsActiveOrderByCreatedDateAsc("waiting", pageable);
         verify(queueRepository, times(5)).save(any());
         waitingTokens.forEach(token -> Assertions.assertEquals("active", token.getIsActive()));
+    }
+
+    @Test
+    void 활성화할수있는_토큰갯수를_주면_활성화된다() {
+        // given
+        given(queueRepository.addActiveTokens(Mockito.anyLong()))
+                .willReturn(5L);
+
+        // when
+        queueService.activateTokens(5L);
+
+        // then
+        // 대기 중인 토큰 5개가 활성화 되었는지 확인
+        verify(queueRepository, atLeastOnce()).addActiveTokens(5L);
     }
 
 }

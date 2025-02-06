@@ -1,18 +1,18 @@
 package kr.hhplus.be.server.integration;
 
+import kr.hhplus.be.server.application.reservation.ReservationFacade;
+import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.ConcertScheduleRepository;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.concert.ConcertSeatRepository;
 import kr.hhplus.be.server.domain.queue.Queue;
+import kr.hhplus.be.server.domain.queue.QueueRepository;
 import kr.hhplus.be.server.domain.queue.QueueService;
 import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.ReservationRepository;
 import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserRepository;
-import kr.hhplus.be.server.application.reservation.ReservationFacade;
-import kr.hhplus.be.server.infrastructure.queue.QueueRepositoryImpl;
-import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class ReservationFacadeTest {
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
-    private QueueRepositoryImpl queueRepositoryImpl;
+    private QueueRepository queueRepository;
 
     @Test
     void 콘서트좌석을_예약하면_예약내역이_반환된다() {
@@ -123,7 +123,7 @@ public class ReservationFacadeTest {
         Assertions.assertEquals(5000L,savedUser.getBalance());
 
         // Token 삭제 확인
-        Optional<Queue> removedUuid = queueRepositoryImpl.findByUuid(uuid);
+        Optional<Queue> removedUuid = queueRepository.findByUuid(uuid);
         Assertions.assertEquals(true,removedUuid.isEmpty());
 
     }
