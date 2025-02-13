@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.application.reservation;
 
 import jakarta.transaction.Transactional;
+import kr.hhplus.be.server.common.event.CompletedPaymentEvent;
+import kr.hhplus.be.server.common.event.CompletedReservationEvent;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.concert.ConcertService;
 import kr.hhplus.be.server.domain.queue.QueueService;
@@ -10,6 +12,7 @@ import kr.hhplus.be.server.domain.user.User;
 import kr.hhplus.be.server.domain.user.UserService;
 import kr.hhplus.be.server.application.reservation.dto.ReservationResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +23,7 @@ public class ReservationFacade {
     private final ReservationService reservationService;
     private final UserService userService;
     private final QueueService queueService;
+    private final ApplicationEventPublisher eventPublisher;
 
     // 콘서트 좌석 예약
     @Transactional
@@ -33,6 +37,15 @@ public class ReservationFacade {
 
         // Response 생성
         ReservationResponse response = ReservationResponse.fromEntity(reservation);
+
+        // 예약 정보 전송(트랜잭션 분리를 위한 이벤트 기반)
+        eventPublisher.publishEvent(new CompletedReservationEvent(
+                reservation.getId(),
+                user.getId(),
+                reserveSeat.getId(),
+                reserveSeat.getPrice()
+        ));
+
 
         return response;
     }
@@ -54,5 +67,15 @@ public class ReservationFacade {
 
         // 해당 사용된 토큰 삭제
         queueService.removeToken(tokenUuid);
+
+        // 결제 완료 정보 전송(트랜잭션 분리를 위한 이벤트 기반)
+        eventPublisher.publishEvent(new CompletedPaymentEvent(
+                reservationId,
+                userId,
+                concertSeat.getId(),
+                concertSeat.getPrice()
+        ));
     }
+
+
 }
