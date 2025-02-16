@@ -1,12 +1,11 @@
-package kr.hhplus.be.server.common.event;
-
+package kr.hhplus.be.server.application.publish.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CompletedPaymentEvent {
+public class CompletedReservationEvent {
     private final Long reservationId;
     private final Long userId;
     private final Long seatId;

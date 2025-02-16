@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.application.reservation;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.common.event.CompletedPaymentEvent;
-import kr.hhplus.be.server.common.event.CompletedReservationEvent;
+import kr.hhplus.be.server.application.publish.event.CompletedPaymentEvent;
+import kr.hhplus.be.server.application.publish.event.CompletedReservationEvent;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.concert.ConcertService;
 import kr.hhplus.be.server.domain.queue.QueueService;
@@ -25,12 +25,12 @@ public class ReservationFacade {
     private final QueueService queueService;
     private final ApplicationEventPublisher eventPublisher;
 
-    // 콘서트 좌석 예약
+    // 예약 생성
     @Transactional
     public ReservationResponse reserveSeat(Long userId, Long concertScheduleId, Long seatNo) {
         // 유저 조회
         User user = userService.findUserById(userId);
-        // 예약가능한 좌석 예약
+        // 좌석 선점
         ConcertSeat reserveSeat = concertService.reserveAvailableSeat(user, concertScheduleId, seatNo);
         // 예약 내역 생성
         Reservation reservation = reservationService.makeReservation(user, reserveSeat, reserveSeat.getPrice());
@@ -50,7 +50,7 @@ public class ReservationFacade {
         return response;
     }
 
-    // 좌석 결제
+    // 예약 결제
     @Transactional
     public void makeSeatPayment(Long userId, Long concertSeatId, Long reservationId, String tokenUuid) {
         // 해당 좌석 조회
