@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.application.reservation;
 
 import jakarta.transaction.Transactional;
-import kr.hhplus.be.server.application.publish.event.CompletedPaymentEvent;
-import kr.hhplus.be.server.application.publish.event.CompletedReservationEvent;
+import kr.hhplus.be.server.application.reservation.event.CompletedPaymentEvent;
+import kr.hhplus.be.server.application.reservation.event.CompletedReservationEvent;
 import kr.hhplus.be.server.domain.concert.ConcertSeat;
 import kr.hhplus.be.server.domain.concert.ConcertService;
 import kr.hhplus.be.server.domain.queue.QueueService;
