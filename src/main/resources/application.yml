@@ -24,6 +24,10 @@ spring:
     redis:
       host: localhost
       port: 6379
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer:
+      group-id: "myGroup"
 
 ---
 spring.config.activate.on-profile: local, test

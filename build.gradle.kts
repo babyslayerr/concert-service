@@ -33,6 +33,12 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 	implementation("org.projectlombok:lombok")
 
+	// kafka
+	implementation ("org.springframework.kafka:spring-kafka")
+	testImplementation ("org.springframework.kafka:spring-kafka-test")
+	testImplementation ("org.testcontainers:kafka")
+
+
 	// redisson
 	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
 
@@ -40,6 +46,8 @@ dependencies {
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
 	// runtimeOnly("com.h2database:h2")
+
+
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
