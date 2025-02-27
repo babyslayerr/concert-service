@@ -28,7 +28,7 @@ public class ConcertFacade {
                 .map((concertSchedule) -> {
                     return ConcertScheduleResponse.builder()
                             .id(concertSchedule.getId())
-                            .createdDate(concertSchedule.getConcertDate())
+                            .concertDate(concertSchedule.getConcertDate())
                             .build();
                 }).toList();
         Page<ConcertScheduleResponse> response = new PageImpl<>(concertScheduleResponseList, concertSchedulePage.getPageable(), concertSchedulePage.getTotalElements());
