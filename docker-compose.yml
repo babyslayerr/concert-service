@@ -38,3 +38,23 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+  influxdb-grafana:
+    image: philhawthorne/docker-influxdb-grafana:latest
+    container_name: docker-influxdb-grafana
+    ports:
+      - "3003:3003"   # Grafana Web UI 포트
+      - "3004:8083"   # InfluxDB Admin UI 포트 (InfluxDB 1.x)
+      - "8086:8086"   # InfluxDB HTTP API 포트
+    volumes:
+      - /path/for/influxdb:/var/lib/influxdb  # InfluxDB 데이터 저장소
+      - /path/for/grafana:/var/lib/grafana    # Grafana 데이터 저장소
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local
+  kafka_data:
+    driver: local
