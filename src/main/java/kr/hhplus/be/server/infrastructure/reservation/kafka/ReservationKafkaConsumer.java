@@ -1,34 +1,31 @@
 package kr.hhplus.be.server.infrastructure.reservation.kafka;
 
-import kr.hhplus.be.server.domain.reservation.*;
-import kr.hhplus.be.server.infrastructure.external.ExternalApiClient;
+import kr.hhplus.be.server.domain.reservation.ReservationDto;
+import kr.hhplus.be.server.domain.reservation.ReservationOutbox;
+import kr.hhplus.be.server.domain.reservation.ReservationOutboxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ReservationKafkaConsumer {
 
-    private final ExternalApiClient apiClient;
-
-    private final ReservationCreatedOutboxRepository reservationCreatedOutboxRepository;
-    private final PaymentCreatedOutboxRepository paymentCreatedOutboxRepository;
+    private final ReservationOutboxRepository reservationOutboxRepository;
 
     @KafkaListener(topics = "completedReservation",groupId = "reservation")
-    public void completedReservationListener(String reservationId){
+    public void completedReservationListener(ReservationDto reservationDto){
         // 메세지 큐의 Publishing 을 확인
-        ReservationCreatedOutbox reservationCreatedOutbox = reservationCreatedOutboxRepository.findByReservationId(Long.valueOf(reservationId)).orElseThrow();
-        reservationCreatedOutbox.published();
-        reservationCreatedOutboxRepository.save(reservationCreatedOutbox);
+        ReservationOutbox reservationOutbox = reservationOutboxRepository.findByReservationIdAndEventName(Long.valueOf(reservationDto.getId()),"CompletedReservationEvent").orElseThrow();
+        reservationOutbox.published();
+        reservationOutboxRepository.save(reservationOutbox);
     }
 
     @KafkaListener(topics = "completedPayment",groupId = "reservation")
-    public void completedPaymentListener(String reservationId){
+    public void completedPaymentListener(ReservationDto reservationDto){
         // 메세지 큐의 Publishing 을 확인
-        PaymentCreatedOutbox paymentCreatedOutbox = paymentCreatedOutboxRepository.findByReservationId(Long.valueOf(reservationId)).orElseThrow();
-        paymentCreatedOutbox.published();
-        paymentCreatedOutboxRepository.save(paymentCreatedOutbox);
+        ReservationOutbox reservationOutbox = reservationOutboxRepository.findByReservationIdAndEventName(Long.valueOf(reservationDto.getId()),"CompletedPaymentEvent").orElseThrow();
+        reservationOutbox.published();
+        reservationOutboxRepository.save(reservationOutbox);
     }
 }

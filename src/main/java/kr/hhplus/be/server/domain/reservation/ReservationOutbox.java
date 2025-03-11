@@ -10,24 +10,30 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Table(name = "reservation_created_outbox")
-public class ReservationCreatedOutbox {
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "reservation_outbox")
+public class ReservationOutbox {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long reservationId;
+
     @Enumerated(EnumType.STRING)
     private OutboxStatus status;
+
+    private Long reservationId;
     @Column(name = "created_date_time")
     private LocalDateTime createdDateTime;
 
+    // 이벤트 객체 명
+    private String eventName;
+
+    // 이벤트 객체의 json
+    @Column(columnDefinition = "LONGTEXT")
+    private String payload;
     public void published() {
         this.status = OutboxStatus.PUBLISHED;
     }
-
-
 }
