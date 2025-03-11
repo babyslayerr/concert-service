@@ -29,7 +29,8 @@ function getToken(){
 }
 function checkStatus(uuid){
     while(true){
-        let response = JSON.parse(http.get(`http://localhost:8080/token/status?uuid=${uuid}`).body);
+        let response = JSON.parse(http.get(`http://localhost:8080/token/status?uuid=${uuid}`
+        ,{tags:{name:"http://localhost:8080/token/status"}}).body);
         console.log(response)
         if(response.status === 'active'){
             break;
@@ -93,3 +94,5 @@ function reserveSeat(userId,concertScheduleId,seatNumber,uuid){
 
     http.post(url, payload, params)
 }
+// 실행 명령어
+// k6 run --out influxdb=http://localhost:8086/k6 .\src\main\resources\k6\k6ReservationTest.js
