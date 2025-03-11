@@ -17,8 +17,7 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationCreatedOutboxRepository reservationCreatedOutboxRepository;
-    private final PaymentCreatedOutboxRepository paymentCreatedOutboxRepository;
+    private final ReservationOutboxRepository reservationOutboxRepository;
     private final ReservationKafkaProducer reservationKafkaProducer;
 
     private static final Logger log = LoggerFactory.getLogger(ReservationService.class);
@@ -65,29 +64,31 @@ public class ReservationService {
     }
 
     public void rePublishReservationCompletion(Long waitMinute) {
-        reservationCreatedOutboxRepository.findAllByStatus(OutboxStatus.PENDING)
+        reservationOutboxRepository.findAllByStatusAndEventName(OutboxStatus.PENDING,"CompletedReservationEvent")
                 .stream()
                 .forEach((e)->{
                     // n 분동안 상태가 Pending 인 경우 메세지 재발행
                     if(e.getCreatedDateTime().minusMinutes(waitMinute).isAfter(LocalDateTime.now())){
                         // 메세지 재발행
-                        reservationKafkaProducer.publishCompletedReservation(e.getReservationId());
+                        Reservation reservation = reservationRepository.findById(e.getReservationId()).orElseThrow();
+                        reservationKafkaProducer.publishCompletedReservation(reservation);
                         // 재발송 방지를 위한 기존 메세지 각각 삭제
-                        reservationCreatedOutboxRepository.delete(e);
+                        reservationOutboxRepository.delete(e);
                     }
                 });
     }
 
     public void rePublishPaymentCompletion(Long waitMinute) {
-        paymentCreatedOutboxRepository.findAllByStatus(OutboxStatus.PENDING)
+        reservationOutboxRepository.findAllByStatusAndEventName(OutboxStatus.PENDING,"CompletedPaymentEvent")
                 .stream()
                 .forEach((e)->{
                     // 5분동안 상태가 Pending 인 경우 메세지 재발행
                     if(e.getCreatedDateTime().minusMinutes(waitMinute).isAfter(LocalDateTime.now())){
                         // 메세지 재발행
-                        reservationKafkaProducer.publishCompletedReservation(e.getReservationId());
+                        Reservation reservation = reservationRepository.findById(e.getReservationId()).orElseThrow();
+                        reservationKafkaProducer.publishCompletedReservation(reservation);
                         // 재발송 방지를 위한 기존 메세지 각각 삭제
-                        paymentCreatedOutboxRepository.delete(e);
+                        reservationOutboxRepository.delete(e);
                     }
                 });
     }

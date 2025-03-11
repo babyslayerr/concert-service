@@ -2,6 +2,9 @@ package kr.hhplus.be.server.infrastructure.external;
 
 import org.springframework.stereotype.Component;
 
+// event -> kafka 로 구현이 변경되면서 API Call 이 아닌 발행 구독 시스템으로 변경
+// 되면서 deprecated
+@Deprecated
 @Component
 public class ExternalApiClient {
     public void sendReservationInfo(Long reservationId, Long userId, Long seatId, Long price) {

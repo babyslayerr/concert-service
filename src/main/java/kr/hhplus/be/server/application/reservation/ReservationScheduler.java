@@ -19,9 +19,6 @@ public class ReservationScheduler {
     private final ReservationService reservationService;
 
     private final ConcertService concertService;
-    private final ReservationCreatedOutboxRepository reservationCreatedOutboxRepository;
-    private final ReservationKafkaProducer reservationKafkaProducer;
-    private final PaymentCreatedOutboxRepository paymentCreatedOutboxRepository;
 
     @Scheduled(fixedRate = 10000)
     @Transactional
