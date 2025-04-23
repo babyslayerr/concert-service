@@ -109,4 +109,9 @@ public class UserServiceTest {
         // 저장 여부 확인
         assertEquals(10000,response.getBalance());
     }
+
+    @Test
+    void test(){
+
+    }
 }
